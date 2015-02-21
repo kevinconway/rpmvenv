@@ -20,7 +20,7 @@ Python interpreter, install the contents of requirements.txt, install the
 targeted package, and wrap it all up in an RPM. If the source package does
 not contain a requirements.txt it is silently skipped.
 
-The command line tool allows for some configuration of behaviour::
+The command line tool allows for some configuration of behaviour:
 
 .. code-block:: shell
 
