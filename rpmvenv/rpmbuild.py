@@ -88,9 +88,8 @@ def build(specfile, defines, top=None):
         defines,
         specfile,
     ).encode('ascii')
-    cmd = shlex.split(cmd)
     proc = subprocess.Popen(
-        cmd,
+        shlex.split(cmd),
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
     )

@@ -16,13 +16,6 @@ from . import rpmbuild
 from . import template
 
 
-def _build(source, specfile, defines):
-    """Build and return the package path."""
-    top = rpmbuild.topdir()
-    specfile = rpmbuild.write_spec(top, specfile)
-    rpmbuild.copy_source(top, source)
-    return rpmbuild.build(specfile=specfile, defines=defines, top=top)
-
 def build(source, config):
     """Generate an RPM from a config file mapping.
 
@@ -48,6 +41,10 @@ def build(source, config):
                     is the path of the source file relative to the source root
                     and the second is the path of the installed file relative
                     to the system root.
+
+            -   post => Iterable of post-install commands to run.
+
+            -   postun => Iterable post-uninstall commands to run.
 
         -   macros => RPM macro definitions.
 
@@ -174,7 +171,10 @@ def main():
 
         config.setdefault('spec', {})['requirements'] = args.requirements
 
-    if args.no_requirements:
+    if (
+            args.no_requirements or not
+            os.path.exists(os.path.join(path, 'requirements.txt'))
+    ):
 
         config.setdefault('spec', {})['requirements'] = ()
 

@@ -77,6 +77,8 @@ def spec(
         pip_options=(),
         requirements=('requirements.txt',),
         extra_files=(),
+        post=(),
+        postun=(),
 ):
     """Render a SPEC file with parameters.
 
@@ -101,6 +103,10 @@ def spec(
             should be installed on a host system. The second element is a path
             relative to the host system root where the file should be
             installed. Ex: (('bin/init.sh', 'etc/init.d/myproject'))
+        post (iter of str): An iterable of commands to run during the post
+            install phase.
+        postun (iter of str): An iterable of commands to run during the postun
+            install phase.
     """
     venv_options = list(venv_options)
     venv_options.append('--always-copy')
@@ -114,4 +120,6 @@ def spec(
         pip_options=pip_options,
         requirements=requirements,
         extra_files=extra_files,
+        post=post,
+        postun=postun,
     )
