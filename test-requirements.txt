@@ -1,0 +1,5 @@
+pep8
+pyflakes
+pylint
+pytest
+pyenchant

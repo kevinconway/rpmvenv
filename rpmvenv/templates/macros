@@ -1,0 +1,1 @@
+{% for macro, definition in macros %}--define='{{ macro }} {{ definition }}' {% endfor %}
