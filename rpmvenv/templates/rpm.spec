@@ -73,7 +73,7 @@ venvctrl-relocate --source=%{buildroot}/%{final_installation_dir} --destination=
 # Copy over any custom files.
 {% for source, destination in extra_files %}
 mkdir -p "%{buildroot}/%(dirname {{ destination }})"
-cp %{SOURCE0}/{{ source }} %{buildroot}/{{ destination }}
+cp -R %{SOURCE0}/{{ source }} %{buildroot}/{{ destination }}
 {% endfor %}
 
 %clean
