@@ -10,7 +10,7 @@ with open('README.rst', 'r') as readmefile:
 
 setup(
     name='rpmvenv',
-    version='0.1.1',
+    version='0.1.2',
     url='https://github.com/kevinconway/rpmvenv',
     description='RPM packager for Python virtualenv.',
     author="Kevin Conway",
@@ -28,5 +28,8 @@ setup(
         'console_scripts': [
             'rpmvenv = rpmvenv.cmd:main',
         ],
+    },
+    package_data={
+        "rpmvenv": ["templates/*"],
     },
 )
