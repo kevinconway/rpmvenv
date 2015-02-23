@@ -10,7 +10,7 @@ with open('README.rst', 'r') as readmefile:
 
 setup(
     name='rpmvenv',
-    version='0.2.0',
+    version='0.2.1',
     url='https://github.com/kevinconway/rpmvenv',
     description='RPM packager for Python virtualenv.',
     author="Kevin Conway",
