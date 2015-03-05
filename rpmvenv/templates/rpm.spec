@@ -50,9 +50,6 @@ mkdir -p %{buildroot}/%{pkg_install_dir}
 # Create a virtualenv to contain to the package code.
 virtualenv %{venv_dir} {% for option in venv_options %}{{ option }} {% endfor %}
 
-# Ensure pip and setuptools are at the latest versions.
-%{venv_pip} install -U pip setuptools
-
 # Install any Python dependencies.
 {% for requirement in requirements %}
 %{venv_pip} install -r %{SOURCE0}/{{ requirement }}
