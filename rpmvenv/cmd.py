@@ -212,6 +212,7 @@ def main():
             exc.stdout,
             os.linesep,
         ))
+        sys.exit(1)
 
 
 if __name__ == '__main__':
