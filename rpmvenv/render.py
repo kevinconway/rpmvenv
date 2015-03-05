@@ -19,8 +19,11 @@ def macros(template, **kwargs):
         template: A jinja2 template to render with macro values.
 
     Keyword Args:
-        pkg_name: The name of the RPM package. (Required)
+        pkg_name: The name of the direcotory containing the package content.
+            (Required)
         pkg_version: The version number to assign the RPM. (Required)
+        pkg_rpm_name: The name of the RPM package. The default is to use
+            the pkg_name macro.
         pkg_release: The number of times this version has been released.
             The default is 1.
         pkg_group: The RPM group in which the package belongs. The default is
@@ -56,6 +59,7 @@ def macros(template, **kwargs):
                 'Missing required macro value {0}.'.format(required_value)
             )
 
+    macro_values.setdefault('pkg_rpm_name', macro_values['pkg_name'])
     macro_values.setdefault('pkg_release', 1)
     macro_values.setdefault('pkg_summary', macro_values['pkg_name'])
     macro_values.setdefault('pkg_group', 'Applications/System')

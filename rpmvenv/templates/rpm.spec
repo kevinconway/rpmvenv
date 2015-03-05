@@ -1,5 +1,6 @@
 ######### Custom Defined Macros ##########
 # pkg_name - The name of the source Python package. (%{pkg_name})
+# pkg_rpm_name - The name of the RPM. (%{pkg_rpm_name})
 # pkg_version - The version number to assign the RPM. (%{pkg_version})
 # pkg_release - The release number to assign the RPM. (%{pkg_release})
 # pkg_summary - The short summary of the package. (%{pkg_summary})
@@ -12,7 +13,7 @@
 # pkg_user_group - The grou which will own the installed files. (%{pkg_user_group})
 ###########################################
 
-%define final_installation_dir %{pkg_install_dir}/%{name}
+%define final_installation_dir %{pkg_install_dir}/%{pkg_name}
 %define venv_dir %{buildroot}/%{final_installation_dir}
 %define venv_bin %{venv_dir}/bin
 %define venv_python %{venv_bin}/python
@@ -26,7 +27,7 @@
 AutoReq: No
 AutoProv: No
 
-Name: %{pkg_name}
+Name: %{pkg_rpm_name}
 Version: %{pkg_version}
 Release:    %{pkg_release}
 Summary: %{pkg_summary}

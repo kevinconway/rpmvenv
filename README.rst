@@ -78,7 +78,10 @@ values are as follows::
 
     -   macros => RPM macro definitions.
 
-        -   pkg_name => The name of the RPM package.
+        -   pkg_name => The name of the directory containing the package
+                content.
+
+        -   pkg_rpm_name => The name of the RPM.
 
         -   pkg_version => The version number to assign the RPM.
 

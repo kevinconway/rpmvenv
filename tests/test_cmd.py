@@ -10,4 +10,5 @@ from rpmvenv import cmd
 
 def test_cmd_build(source_code, config_file):
     """Test that a default build works without exception."""
-    cmd.build(source_code, config_file)
+    pkg = cmd.build(source_code, config_file)
+    assert config_file['macros']['pkg_rpm_name'] in pkg
