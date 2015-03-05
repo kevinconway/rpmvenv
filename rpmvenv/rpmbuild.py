@@ -21,6 +21,22 @@ IGNORED_PATTERNS = (
 )
 
 
+class RpmProcessError(subprocess.CalledProcessError):
+
+    """An exception thrown during the RPM build process.
+
+    This exception extends the subprocess CalledProcessError to add standard
+    out and standard error string fields.
+    """
+
+    def __init__(self, returncode, cmd, output=None, stdout=None, stderr=None):
+        """Initialize the exception with process information."""
+        super(RpmProcessError, self).__init__(returncode, cmd)
+        self.output = output or ''
+        self.stdout = stdout or ''
+        self.stderr = stderr or ''
+
+
 def topdir():
     """Get the absolute path to a valid rpmbuild %_topdir."""
     top = tempfile.mkdtemp(prefix='rpmvenv')
@@ -93,15 +109,16 @@ def build(specfile, defines, top=None):
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
     )
-    _, err = proc.communicate()
+    out, err = proc.communicate()
     if proc.returncode != 0:
 
-        exc = subprocess.CalledProcessError(
+        exc = RpmProcessError(
             returncode=proc.returncode,
             cmd=cmd,
+            output=err,
+            stdout=out,
+            stderr=err,
         )
-        # Patch this value in outside of __init__ for py26 compat.
-        exc.output = err
         raise exc
 
     return glob.glob(os.path.join(top, 'RPMS', '**', '*.rpm')).pop()
