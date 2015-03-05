@@ -8,6 +8,7 @@ from __future__ import unicode_literals
 import argparse
 import os
 import shutil
+import sys
 
 import yaml
 
@@ -182,7 +183,35 @@ def main():
     config.setdefault('macros', {})['pkg_name'] = config.get('name')
     config['macros']['pkg_version'] = config.get('version')
 
-    return build(source=path, config=config)
+    try:
+
+        return build(source=path, config=config)
+
+    except rpmbuild.RpmProcessError as exc:
+
+        sys.stderr.write('There was an error building the RPM.{0}'.format(
+            os.linesep,
+        ))
+
+        sys.stderr.write('Exit code: {0}{1}'.format(
+            exc.returncode,
+            os.linesep,
+        ))
+
+        sys.stderr.write('Command: {0}{1}'.format(
+            exc.cmd,
+            os.linesep,
+        ))
+
+        sys.stderr.write('Stderr: {0}{1}'.format(
+            exc.stderr,
+            os.linesep,
+        ))
+
+        sys.stderr.write('Stdout: {0}{1}'.format(
+            exc.stdout,
+            os.linesep,
+        ))
 
 
 if __name__ == '__main__':
