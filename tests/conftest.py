@@ -18,36 +18,49 @@ def pytest_addoption(parser):
         help="Git URL for a package to test with.",
         required=True,
     )
+    parser.addoption(
+        "--python",
+        help="Python version to use in the test.",
+        default="python2.7",
+    )
 
 
 def pytest_generate_tests(metafunc):
     if 'git_url' in metafunc.fixturenames:
         metafunc.parametrize('git_url', (metafunc.config.option.git_url,))
 
+    if 'python' in metafunc.fixturenames:
+        metafunc.parametrize('python', (metafunc.config.option.python,))
+
 
 @pytest.fixture
 def source_code(git_url, tmpdir):
     """Generate a source code directory and return the path."""
-    cmd = 'git clone {0} {1}/'.format(git_url, str(tmpdir)).encode('ascii')
+    # Strip off the '.git' and grap the last URL segment.
+    pkg_name = git_url[:-4].split('/')[-1]
+    cmd = 'git clone {0} {1}/{2}'.format(
+        git_url,
+        str(tmpdir),
+        pkg_name,
+    ).encode('ascii')
     subprocess.check_call(
         shlex.split(cmd),
     )
-    # Strip off the '.git' and grap the last URL segment.
-    pkg_name = git_url[:-4].split('/')[-1]
     return os.path.abspath(str(tmpdir.join(pkg_name)))
 
 
 @pytest.fixture
-def config_file():
+def config_file(python):
     """Get a basic config file payload."""
     return {
         "name": "testpkg",
         "version": "1",
         "spec": {
-
+            "python": python,
         },
         "macros": {
             "pkg_name": "testpkg",
+            "pkg_rpm_name": "testpkg-rpm-name",
             "pkg_version": "1",
         },
     }

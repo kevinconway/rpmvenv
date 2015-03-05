@@ -95,9 +95,10 @@ def build(source, config):
 
     top = rpmbuild.topdir()
     specfile = rpmbuild.write_spec(top, specfile)
-    rpmbuild.copy_source(top, source)
+    rpmbuild.copy_source(top, source, name=macros['pkg_name'])
     pkg = rpmbuild.build(specfile=specfile, defines=defines, top=top)
     shutil.move(pkg, config.get('output', './'))
+    return os.path.join(config.get('output', './'), os.path.basename(pkg))
 
 
 def main():
@@ -185,7 +186,9 @@ def main():
 
     try:
 
-        return build(source=path, config=config)
+        pkg = build(source=path, config=config)
+        sys.stdout.write('Package created at {0}.'.format(pkg))
+        sys.exit(0)
 
     except rpmbuild.RpmProcessError as exc:
 

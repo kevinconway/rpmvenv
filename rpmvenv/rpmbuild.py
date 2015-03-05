@@ -66,17 +66,18 @@ def write_spec(top, spec):
     return path
 
 
-def copy_source(top, source):
+def copy_source(top, source, name=None):
     """Copy the source directory into the SOURCES directory.
 
     Args:
         top: The absolute path to the %_topdir.
         source: The absolute path to the source directory.
+        name: The name of the directory to place in SOURCES.
 
     Returns:
         The absolute path to the copy.
     """
-    name = os.path.basename(source)
+    name = name or os.path.basename(source)
     path = os.path.join(top, 'SOURCES', name)
     shutil.copytree(
         source,
