@@ -61,7 +61,7 @@ class Extension(interface.Extension):
     @staticmethod
     def generate(namespace):
         """Generate Python virtualenv blocks and macros."""
-        venv_pip = '%{{venv_bin}}/pip install {0}'.format(
+        venv_pip = '%{{venv_python}} %{{venv_bin}}/pip install {0}'.format(
             ' '.join(namespace.pip_flags if namespace.pip_flags else ()),
         )
         venv_cmd = '{0} {1}'.format(
