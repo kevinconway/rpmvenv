@@ -60,6 +60,7 @@ def config_file(python, tmpdir):
                 "description_text",
                 "python_venv",
                 "file_permissions",
+                "blocks",
             ],
         },
         "core": {
@@ -83,6 +84,9 @@ def config_file(python, tmpdir):
         },
         "description_text": {
             "text": "test pkg description"
+        },
+        "blocks": {
+            "post": ("echo 'Hello'",)
         }
     }
     with open(json_file, 'w') as conf_file:
