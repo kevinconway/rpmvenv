@@ -5,6 +5,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
+import json
 import os
 import shlex
 import subprocess
@@ -50,17 +51,42 @@ def source_code(git_url, tmpdir):
 
 
 @pytest.fixture
-def config_file(python):
-    """Get a basic config file payload."""
-    return {
-        "name": "testpkg",
-        "version": "1",
-        "spec": {
+def config_file(python, tmpdir):
+    """Get a config file path."""
+    json_file = str(tmpdir.join('conf.json'))
+    config_body = {
+        "extensions": {
+            "enabled": [
+                "description_text",
+                "python_venv",
+                "file_permissions",
+            ],
+        },
+        "core": {
+            "group": "Application/System",
+            "license": "Apache2",
+            "name": "test-pkg",
+            "release": "1",
+            "source": "test-pkg",
+            "summary": "test pkg for testing",
+            "version": "1.2.3.4",
+        },
+        "file_permissions": {
+            "group": "vagrant",
+            "user": "vagrant",
+        },
+        "python_venv": {
+            "cmd": "virtualenv",
+            "name": "test-pkg-venv",
+            "path": "/usr/share/python",
             "python": python,
         },
-        "macros": {
-            "pkg_name": "testpkg",
-            "pkg_rpm_name": "testpkg-rpm-name",
-            "pkg_version": "1",
-        },
+        "description_text": {
+            "text": "test pkg description"
+        }
     }
+    with open(json_file, 'w') as conf_file:
+
+        conf_file.write(json.dumps(config_body))
+
+    return json_file

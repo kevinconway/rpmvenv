@@ -5,10 +5,13 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-from rpmvenv import cmd
+from rpmvenv import cli
 
 
 def test_cmd_build(source_code, config_file):
     """Test that a default build works without exception."""
-    pkg = cmd.build(source_code, config_file)
-    assert config_file['macros']['pkg_rpm_name'] in pkg
+    cfg = cli.load_configuration_file(config_file)
+    extensions = cli.load_extensions(whitelist=cfg.extensions.enabled)
+    mapping = cli.build_config(cfg, extensions)
+    pkg = cli.build_from_mapping(mapping, source_code, cfg.core.name)
+    assert cfg.core.name in pkg
