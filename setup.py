@@ -10,7 +10,7 @@ with open('README.rst', 'r') as readmefile:
 
 setup(
     name='rpmvenv',
-    version='0.5.0',
+    version='0.6.0',
     url='https://github.com/kevinconway/rpmvenv',
     description='RPM packager for Python virtualenv.',
     author="Kevin Conway",
@@ -35,6 +35,7 @@ setup(
             'file_permissions = rpmvenv.extensions.files.permissions:Extension',
             'file_extras = rpmvenv.extensions.files.extras:Extension',
             'python_venv = rpmvenv.extensions.python.venv:Extension',
+            'blocks = rpmvenv.extensions.blocks.generic:Extension',
         ]
     },
     package_data={
