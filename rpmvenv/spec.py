@@ -7,7 +7,13 @@ from __future__ import unicode_literals
 
 import copy
 
-import ordereddict
+try:
+
+    from ordereddict import OrderedDict
+
+except ImportError:
+
+    from collections import OrderedDict
 
 from . import template
 
@@ -91,9 +97,9 @@ class Spec(object):
 
     def __init__(self):
         """Initialize the SPEC file."""
-        self.macros = ordereddict.OrderedDict()
-        self.globals = ordereddict.OrderedDict()
-        self.tags = ordereddict.OrderedDict()
+        self.macros = OrderedDict()
+        self.globals = OrderedDict()
+        self.tags = OrderedDict()
         self.blocks = Blocks()
 
     def __str__(self):
