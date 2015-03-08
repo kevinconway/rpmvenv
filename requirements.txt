@@ -3,3 +3,4 @@ venvctrl
 argparse
 confpy
 ordereddict
+semver

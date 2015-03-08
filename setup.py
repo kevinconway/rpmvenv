@@ -24,6 +24,7 @@ setup(
         'argparse',
         'confpy',
         'ordereddict',
+        'semver',
     ],
     entry_points={
         'console_scripts': [
@@ -31,7 +32,6 @@ setup(
         ],
         'rpmvenv.extensions': [
             'core = rpmvenv.extensions.core:Extension',
-            'description_text = rpmvenv.extensions.description.text:Extension',
             'file_permissions = rpmvenv.extensions.files.permissions:Extension',
             'file_extras = rpmvenv.extensions.files.extras:Extension',
             'python_venv = rpmvenv.extensions.python.venv:Extension',
