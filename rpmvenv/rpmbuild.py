@@ -87,7 +87,7 @@ def copy_source(top, source, name=None):
     return path
 
 
-def build(specfile, defines, top=None):
+def build(specfile, top=None):
     """Run rpmbuild with options.
 
     Args:
@@ -100,9 +100,8 @@ def build(specfile, defines, top=None):
         The absolute path to the new RPM.
     """
     top = top or topdir()
-    cmd = "rpmbuild -ba --define='_topdir {0}' {1} {2}".format(
+    cmd = "rpmbuild -ba --define='_topdir {0}' {1}".format(
         top,
-        defines,
         specfile,
     ).encode('ascii')
     proc = subprocess.Popen(
