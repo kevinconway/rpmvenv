@@ -1,0 +1,17 @@
+# Macros
+{% for define_name, define_value in spec.macros.items() %}%define {{ define_name }} {{ define_value }}
+{% endfor -%}
+
+# Globals
+{% for global_name, global_value in spec.globals.items() %}%global {{ global_name }} {{ global_value }}
+{% endfor -%}
+
+# Tags
+{% for tag_name, tag_value in spec.tags.items() %}{{ tag_name}}: {{ tag_value }}
+{% endfor -%}
+
+# Blocks
+{% for block_name, block_lines in spec.blocks %}%{{ block_name }}
+{% for block_line in block_lines %}{{ block_line }}
+{% endfor -%}
+{% endfor -%}
