@@ -57,33 +57,66 @@ class Extension(interface.Extension):
 
     name = 'python_venv'
     description = 'Packaging extension for generating virtualenv.'
+    version = '1.0.0'
+    requirements = {}
 
     @staticmethod
-    def generate(namespace):
-        """Generate Python virtualenv blocks and macros."""
-        venv_pip = '%{{venv_python}} %{{venv_bin}}/pip install {0}'.format(
-            ' '.join(namespace.pip_flags if namespace.pip_flags else ()),
+    def generate(config, spec):
+        """Generate Python virtualenv content."""
+        spec.macros['venv_cmd'] = '{0} {1}'.format(
+            config.python_venv.cmd,
+            ' '.join(
+                config.python_venv.flags if config.python_venv.flags else ()
+            ),
         )
-        venv_cmd = '{0} {1}'.format(
-            namespace.cmd,
-            ' '.join(namespace.flags if namespace.flags else ()),
+        if config.python_venv.python:
+
+            spec.macros['venv_cmd'] = '{0} --python={1}'.format(
+                spec.macros['venv_cmd'],
+                config.python_venv.python,
+            )
+        spec.macros['venv_name'] = config.python_venv.name
+        spec.macros['venv_install_dir'] = '{0}/%{{venv_name}}'.format(
+            config.python_venv.path,
         )
-        if namespace.python:
+        spec.macros['venv_dir'] = '%{buildroot}/%{venv_install_dir}'
+        spec.macros['venv_bin'] = '%{venv_dir}/bin'
+        spec.macros['venv_python'] = '%{venv_bin}/python'
+        spec.macros['venv_pip'] = (
+            '%{{venv_python}} %{{venv_bin}}/pip install {0}'.format(
+                ' '.join(
+                    config.python_venv.pip_flags
+                    if config.python_venv.pip_flags
+                    else ()
+                ),
+            )
+        )
 
-            venv_cmd = '{0} --python={1}'.format(venv_cmd, namespace.python)
+        spec.globals['__os_install_post'] = (
+            "%(echo '%{__os_install_post}' | sed -e "
+            "'s!/usr/lib[^[:space:]]*/brp-python-bytecompile[[:space:"
+            "]].*$!!g')"
+        )
 
-        install_steps = [
-            '%{venv_cmd} %{venv_dir}',
-        ]
-        for requirement in namespace.requirements:
+        spec.tags['AutoReq'] = 'No'
+        spec.tags['AutoProv'] = 'No'
 
-            install_steps.append(
+        spec.blocks.prep.append(
+            'mkdir -p %{buildroot}/%{venv_install_dir}',
+        )
+
+        spec.blocks.files.append('/%{venv_install_dir}')
+
+        spec.blocks.install.append('%{venv_cmd} %{venv_dir}')
+        for requirement in config.python_venv.requirements:
+
+            spec.blocks.install.append(
                 '%{{venv_pip}} -r %{{SOURCE0}}/{0}'.format(
                     requirement,
                 )
             )
 
-        install_steps.extend((
+        spec.blocks.install.extend((
             'pushd %{SOURCE0}',
             '%{venv_python} setup.py install',
             'popd',
@@ -96,41 +129,6 @@ class Extension(interface.Extension):
             'direcotry.',
             'venvctrl-relocate --source=%{venv_dir}'
             ' --destination=/%{venv_install_dir}',
-
         ))
 
-        return {
-            "macros": (
-                ('venv_cmd', venv_cmd),
-                ('venv_name', namespace.name),
-                ('venv_install_dir', '{0}/%{{venv_name}}'.format(
-                    namespace.path,
-                )),
-                ('venv_dir', '%{buildroot}/%{venv_install_dir}'),
-                ('venv_bin', '%{venv_dir}/bin'),
-                ('venv_python', '%{venv_bin}/python'),
-                ('venv_pip', venv_pip),
-            ),
-            "defines": (),
-            "globals": (
-                (
-                    "__os_install_post",
-                    "%(echo '%{__os_install_post}' | sed -e "
-                    "'s!/usr/lib[^[:space:]]*/brp-python-bytecompile[[:space:"
-                    "]].*$!!g')",
-                ),
-            ),
-            "tags": (
-                ('AutoReq', 'No'),
-                ('AutoProv', 'No'),
-            ),
-            "blocks": (
-                ('prep', (
-                    'mkdir -p %{buildroot}/%{venv_install_dir}',
-                )),
-                ('install', install_steps),
-                ('files', (
-                    '/%{venv_install_dir}',
-                )),
-            ),
-        }
+        return spec

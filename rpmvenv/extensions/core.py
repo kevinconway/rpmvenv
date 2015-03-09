@@ -51,7 +51,7 @@ cfg = Configuration(
         buildroot=StringOption(
             description='The name of the buildroot directory to use.',
             default=(
-                '%(mktemp -ud %{_tmppath}/%{name}-%{version}'
+                '%(mktemp -ud %{_tmppath}/%{SOURCE0}-%{version}'
                 '-%{release}-XXXXXX)'
             ),
         ),
@@ -65,54 +65,48 @@ class Extension(interface.Extension):
 
     name = 'core'
     description = 'Complete the common core RPM metadata fields.'
+    version = '1.0.0'
+    requirements = {}
 
     @staticmethod
-    def generate(namespace):
+    def generate(config, spec):
         """Generate the core RPM package metadata."""
-        name = namespace.name
-        version = namespace.version
-        release = namespace.release
-        summary = namespace.summary
-        group = namespace.group
-        license = namespace.license
-        url = namespace.url
-        source = namespace.source
-        buildroot = namespace.buildroot
+        name = config.core.name
+        version = config.core.version
+        release = config.core.release
+        summary = config.core.summary
+        group = config.core.group
+        license = config.core.license
+        url = config.core.url
+        source = config.core.source
+        buildroot = config.core.buildroot
 
-        tags = [
-            ('Name', name),
-            ('Version', version),
-            ('Release', release),
-            ('BuildRoot', buildroot),
-        ]
+        spec.tags['Name'] = name
+        spec.tags['Version'] = version
+        spec.tags['Release'] = release
+        spec.tags['BuildRoot'] = buildroot
 
         if summary:
 
-            tags.append(('Summary', summary))
+            spec.tags['Summary'] = summary
 
         if group:
 
-            tags.append(('Group', group))
+            spec.tags['Group'] = group
 
         if license:
 
-            tags.append(('License', license))
+            spec.tags['License'] = license
 
         if url:
 
-            tags.append(('Url', url))
+            spec.tags['Url'] = url
 
         if source:
 
-            tags.append(('Source0', source))
+            spec.tags['Source0'] = source
 
-        return {
-            "macros": (),
-            "defines": (),
-            "globals": (),
-            "tags": tags,
-            "blocks": (
-                ('prep', ('rm -rf %{buildroot}/*',)),
-                ('clean', ('rm -rf %{buildroot}',)),
-            ),
-        }
+        spec.blocks.prep.append('rm -rf %{buildroot}/*')
+        spec.blocks.clean.append('rm -rf %{buildroot}')
+
+        return spec

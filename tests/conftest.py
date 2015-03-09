@@ -15,9 +15,9 @@ import pytest
 
 def pytest_addoption(parser):
     parser.addoption(
-        "--git-url",
-        help="Git URL for a package to test with.",
-        required=True,
+        "--python-git-url",
+        help="Git URL for a Python package to test with.",
+        default=None
     )
     parser.addoption(
         "--python",
@@ -27,20 +27,23 @@ def pytest_addoption(parser):
 
 
 def pytest_generate_tests(metafunc):
-    if 'git_url' in metafunc.fixturenames:
-        metafunc.parametrize('git_url', (metafunc.config.option.git_url,))
+    if 'python_git_url' in metafunc.fixturenames:
+        metafunc.parametrize(
+            'python_git_url',
+            (metafunc.config.option.python_git_url,)
+        )
 
     if 'python' in metafunc.fixturenames:
         metafunc.parametrize('python', (metafunc.config.option.python,))
 
 
 @pytest.fixture
-def source_code(git_url, tmpdir):
+def python_source_code(python_git_url, tmpdir):
     """Generate a source code directory and return the path."""
     # Strip off the '.git' and grap the last URL segment.
-    pkg_name = git_url[:-4].split('/')[-1]
+    pkg_name = python_git_url[:-4].split('/')[-1]
     cmd = 'git clone {0} {1}/{2}'.format(
-        git_url,
+        python_git_url,
         str(tmpdir),
         pkg_name,
     ).encode('ascii')
@@ -51,7 +54,7 @@ def source_code(git_url, tmpdir):
 
 
 @pytest.fixture
-def config_file(python, tmpdir):
+def python_config_file(python, tmpdir):
     """Get a config file path."""
     json_file = str(tmpdir.join('conf.json'))
     config_body = {
@@ -82,11 +85,9 @@ def config_file(python, tmpdir):
             "path": "/usr/share/python",
             "python": python,
         },
-        "description_text": {
-            "text": "test pkg description"
-        },
         "blocks": {
-            "post": ("echo 'Hello'",)
+            "post": ("echo 'Hello'",),
+            "desc": ("test pkg description",),
         }
     }
     with open(json_file, 'w') as conf_file:

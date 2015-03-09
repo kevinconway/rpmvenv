@@ -13,49 +13,33 @@ from confpy.api import StringOption
 from .. import interface
 
 
+BLOCKS = (
+    'post',
+    'postun',
+    'pre',
+    'preun',
+    'prep',
+    'build',
+    'install',
+    'clean',
+    'desc',
+    'files',
+)
+
+
+OPTIONS = dict(
+    (block, ListOption(
+        description='Lines to add to %{0}.'.format(block),
+        option=StringOption(),
+        default=(),
+    ))
+    for block in BLOCKS
+)
+
 cfg = Configuration(
     blocks=Namespace(
         description='Add custom lines to any RPM block.',
-        post=ListOption(
-            description='Lines to add to %post.',
-            option=StringOption(),
-            default=(),
-        ),
-        postun=ListOption(
-            description='Lines to add to %postun.',
-            option=StringOption(),
-            default=(),
-        ),
-        pre=ListOption(
-            description='Lines to add to %pre.',
-            option=StringOption(),
-            default=(),
-        ),
-        preun=ListOption(
-            description='Lines to add to %preun.',
-            option=StringOption(),
-            default=(),
-        ),
-        prep=ListOption(
-            description='Lines to add to %prep.',
-            option=StringOption(),
-            default=(),
-        ),
-        build=ListOption(
-            description='Lines to add to %build.',
-            option=StringOption(),
-            default=(),
-        ),
-        install=ListOption(
-            description='Lines to add to %install.',
-            option=StringOption(),
-            default=(),
-        ),
-        clean=ListOption(
-            description='Lines to add to %clean.',
-            option=StringOption(),
-            default=(),
-        ),
+        **OPTIONS
     ),
 )
 
@@ -66,33 +50,26 @@ class Extension(interface.Extension):
 
     name = 'blocks'
     description = 'Add custom lines to an RPM block.'
+    version = '1.0.0'
+    requirements = {}
 
     @staticmethod
-    def _append(mapping, name, lines):
-        """Add a block into the mapping if lines are given."""
-        for line in lines:
-
-            mapping.setdefault(name, []).append(line)
-
-        return mapping
-
-    @classmethod
-    def generate(cls, namespace):
+    def generate(config, spec):
         """Produce block segments from input."""
-        blocks = {}
-        blocks = cls._append(blocks, 'post', namespace.post)
-        blocks = cls._append(blocks, 'postun', namespace.postun)
-        blocks = cls._append(blocks, 'pre', namespace.pre)
-        blocks = cls._append(blocks, 'preun', namespace.preun)
-        blocks = cls._append(blocks, 'prep', namespace.prep)
-        blocks = cls._append(blocks, 'build', namespace.build)
-        blocks = cls._append(blocks, 'install', namespace.install)
-        blocks = cls._append(blocks, 'clean', namespace.clean)
+        for block in BLOCKS:
 
-        return {
-            "macros": (),
-            "defines": (),
-            "globals": (),
-            "tags": (),
-            "blocks": tuple(blocks.items()),
-        }
+            lines = tuple(getattr(config.blocks, block))
+            if lines:
+
+                block_lines = None
+                if block == 'desc':
+
+                    block_lines = spec.blocks.get('description')
+
+                else:
+
+                    block_lines = spec.blocks.get(block)
+
+                block_lines.extend(lines)
+
+        return spec
