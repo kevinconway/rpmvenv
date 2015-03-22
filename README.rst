@@ -39,6 +39,7 @@ content. Change the values where appropriate.
         }
     }
 
+Make sure `rpmbuild <http://www.rpm.org>`_ is installed.
 With the configuration file in place run the command line tool installed with
 the package to generate the RPM.
 
