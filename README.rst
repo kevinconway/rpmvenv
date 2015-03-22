@@ -14,10 +14,12 @@ content. Change the values where appropriate.
 .. code-block:: javascript
 
     {
-        "extensions": [
-            "python_venv",
-            "blocks"
-        ],
+        "extensions": {
+            "enabled": [
+                "python_venv",
+                "blocks"
+            ]
+        },
         "core": {
             "group": "Application/System",
             "license": "MIT",
