@@ -17,7 +17,7 @@ def pytest_addoption(parser):
     parser.addoption(
         "--python-git-url",
         help="Git URL for a Python package to test with.",
-        default=None
+        default="https://github.com/kevinconway/rpmvenv.git",
     )
     parser.addoption(
         "--python",
