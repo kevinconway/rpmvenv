@@ -117,9 +117,9 @@ class Extension(interface.Extension):
             )
 
         spec.blocks.install.extend((
-            'pushd %{SOURCE0}',
+            'cd %{SOURCE0}',
             '%{venv_python} setup.py install',
-            'popd',
+            'cd -',
             '# RECORD files are used by wheels for checksum. They contain path'
             ' names which',
             '# match the buildroot and must be removed or the package will '
