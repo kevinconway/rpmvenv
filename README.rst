@@ -216,6 +216,29 @@ then CLI flags. That is, environment variables will always override items in
 the configuration file and CLI flags will override both the file and the
 environment variables.
 
+Additional Options
+------------------
+
+In addition to the options for modifying the spec file, the following are also
+available as CLI flags:
+
+-   --source
+
+    The path to a Python source repository. By default, this value resolves to
+    the directory containing the specified configuration file. It can be
+    overridden if the Python source is not adjacent the configuration file.
+
+-   --destination
+
+    The directory in which to place the RPM. The default value is the current
+    working directory.
+
+-   --spec
+
+    This flag disables the actual build in favour of printing the spec file
+    contents to stdout. Use this option if you need to manually verify the
+    spec file before running a build.
+
 Testing
 =======
 
