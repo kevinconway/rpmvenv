@@ -61,7 +61,11 @@ def parse_args(argv):
     args, _ = parser.parse_known_args(argv)
     args = vars(args)
     args['config'] = os.path.abspath(args['config'])
-    args['source'] = args['source'] or os.path.dirname(args['config'])
+    args['source'] = (
+        os.path.abspath(args['source'])
+        if args['source']
+        else os.path.dirname(args['config'])
+    )
     return args
 
 
