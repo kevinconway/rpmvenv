@@ -244,9 +244,9 @@ Testing
 
 The included tests are written using py.test. There is also an included tox.ini
 which is configured to run the tests in addition to style checks. By default,
-the integration tests do not run. Pass a '--python-git-url' flag to the py.test
-runner with a URL which can be used to clone a git repository and the
-integration tests will run using that remote code base.
+the integration tests run using rpmvenv as the target project to build.
+However, any project with a requirements.txt file in the repository root can
+be specified with the '--python-git-url' flag while running the tests.
 
 License
 =======
