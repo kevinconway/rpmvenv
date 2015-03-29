@@ -9,6 +9,7 @@ import json
 import os
 import shlex
 import subprocess
+import sys
 
 import pytest
 
@@ -17,7 +18,7 @@ def pytest_addoption(parser):
     parser.addoption(
         "--python-git-url",
         help="Git URL for a Python package to test with.",
-        default=None
+        default="https://github.com/kevinconway/rpmvenv.git",
     )
     parser.addoption(
         "--python",
@@ -47,6 +48,10 @@ def python_source_code(python_git_url, tmpdir):
         str(tmpdir),
         pkg_name,
     ).encode('ascii')
+    if sys.version_info[0] > 2:
+
+        cmd = cmd.decode('utf8')
+
     subprocess.check_call(
         shlex.split(cmd),
     )
