@@ -10,6 +10,7 @@ import os
 import shlex
 import shutil
 import subprocess
+import sys
 import tempfile
 
 
@@ -104,6 +105,11 @@ def build(specfile, top=None):
         top,
         specfile,
     ).encode('ascii')
+    # PY3 shlex only works with unicode strings. Convert as needed.
+    if sys.version_info[0] > 2:
+
+        cmd = cmd.decode('utf8')
+
     proc = subprocess.Popen(
         shlex.split(cmd),
         stdout=subprocess.PIPE,

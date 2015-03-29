@@ -9,6 +9,7 @@ import json
 import os
 import shlex
 import subprocess
+import sys
 
 import pytest
 
@@ -47,6 +48,10 @@ def python_source_code(python_git_url, tmpdir):
         str(tmpdir),
         pkg_name,
     ).encode('ascii')
+    if sys.version_info[0] > 2:
+
+        cmd = cmd.decode('utf8')
+
     subprocess.check_call(
         shlex.split(cmd),
     )
