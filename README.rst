@@ -216,14 +216,37 @@ then CLI flags. That is, environment variables will always override items in
 the configuration file and CLI flags will override both the file and the
 environment variables.
 
+Additional Options
+------------------
+
+In addition to the options for modifying the spec file, the following are also
+available as CLI flags:
+
+-   --source
+
+    The path to a Python source repository. By default, this value resolves to
+    the directory containing the specified configuration file. It can be
+    overridden if the Python source is not adjacent the configuration file.
+
+-   --destination
+
+    The directory in which to place the RPM. The default value is the current
+    working directory.
+
+-   --spec
+
+    This flag disables the actual build in favour of printing the spec file
+    contents to stdout. Use this option if you need to manually verify the
+    spec file before running a build.
+
 Testing
 =======
 
 The included tests are written using py.test. There is also an included tox.ini
 which is configured to run the tests in addition to style checks. By default,
-the integration tests do not run. Pass a '--python-git-url' flag to the py.test
-runner with a URL which can be used to clone a git repository and the
-integration tests will run using that remote code base.
+the integration tests run using rpmvenv as the target project to build.
+However, any project with a requirements.txt file in the repository root can
+be specified with the '--python-git-url' flag while running the tests.
 
 License
 =======
