@@ -239,6 +239,12 @@ available as CLI flags:
     contents to stdout. Use this option if you need to manually verify the
     spec file before running a build.
 
+-   --verbose
+
+    Normally, the stdout and stderr of the rpmbuild call are captured unless
+    there is an exception. Adding this flag enables the real-time output from
+    the rpmbuild command.
+
 Testing
 =======
 

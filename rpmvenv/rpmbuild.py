@@ -88,14 +88,60 @@ def copy_source(top, source, name=None):
     return path
 
 
-def build(specfile, top=None):
+def verbose_popen(cmd):
+    """Run a command with streaming output.
+
+    Args:
+        cmd (str): A command to run with popen.
+
+    Raises:
+        CalledProcessError: If the returncode is not 0.
+    """
+    proc = subprocess.Popen(shlex.split(cmd))
+    proc.wait()
+    if proc.returncode != 0:
+
+        raise subprocess.CalledProcessError(
+            returncode=proc.returncode,
+            cmd=cmd,
+        )
+
+
+def quiet_popen(cmd):
+    """Run a command with captured output.
+
+    Args:
+        cmd (str): A command to run with popen.
+
+    Raises:
+        RpmProcessError: If the returncode is not 0.
+    """
+    proc = subprocess.Popen(
+        shlex.split(cmd),
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+    )
+    out, err = proc.communicate()
+    if proc.returncode != 0:
+
+        raise RpmProcessError(
+            returncode=proc.returncode,
+            cmd=cmd,
+            output=err,
+            stdout=out,
+            stderr=err,
+        )
+
+
+def build(specfile, top=None, verbose=False):
     """Run rpmbuild with options.
 
     Args:
         specfile: The absolute path to the SPEC file to build.
-        defines: Any custom macro definitions to use.
         top: The %_topdir to use during the build. The default is a temporary
             directory which is automatically generated.
+        verbose: Whether or not to stream the rpmbuild output in real time
+            or only during errors.
 
     Returns:
         The absolute path to the new RPM.
@@ -110,21 +156,12 @@ def build(specfile, top=None):
 
         cmd = cmd.decode('utf8')
 
-    proc = subprocess.Popen(
-        shlex.split(cmd),
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-    )
-    out, err = proc.communicate()
-    if proc.returncode != 0:
+    if not verbose:
 
-        exc = RpmProcessError(
-            returncode=proc.returncode,
-            cmd=cmd,
-            output=err,
-            stdout=out,
-            stderr=err,
-        )
-        raise exc
+        quiet_popen(cmd)
+
+    else:
+
+        verbose_popen(cmd)
 
     return glob.glob(os.path.join(top, 'RPMS', '**', '*.rpm')).pop()

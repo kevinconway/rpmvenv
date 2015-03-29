@@ -7,6 +7,7 @@ from __future__ import unicode_literals
 
 import argparse
 import os
+import subprocess
 import sys
 
 import confpy.api
@@ -51,6 +52,12 @@ def parse_args(argv):
         default=False,
         action='store_true',
     )
+    parser.add_argument(
+        '--verbose',
+        help='Enable real-time streaming output of rpmbuild.',
+        default=False,
+        action='store_true',
+    )
     args, _ = parser.parse_known_args(argv)
     args = vars(args)
     args['config'] = os.path.abspath(args['config'])
@@ -58,12 +65,12 @@ def parse_args(argv):
     return args
 
 
-def generate_rpm(source, destination, specfile):
+def generate_rpm(source, destination, specfile, verbose=False):
     """Generate an RPM from the given arguments mapping."""
     top = rpmbuild.topdir()
     rpmbuild.copy_source(top, source)
     specfile = rpmbuild.write_spec(top, specfile)
-    pkg = rpmbuild.build(specfile=specfile, top=top)
+    pkg = rpmbuild.build(specfile=specfile, top=top, verbose=verbose)
     shutil.move(pkg, destination)
     return os.path.join(destination, os.path.basename(pkg))
 
@@ -128,11 +135,12 @@ def main(argv=sys.argv[1:]):
             args['source'],
             args['destination'],
             specfile,
+            args['verbose'],
         )
 
     except rpmbuild.RpmProcessError as exc:
 
-        sys.stderr.write('There was an error generated the RPM.{0}'.format(
+        sys.stderr.write('There was an error generating the RPM.{0}'.format(
             os.linesep,
         ))
         sys.stderr.write('The exit code was: {0}.{1}'.format(
@@ -149,6 +157,21 @@ def main(argv=sys.argv[1:]):
         ))
         sys.stderr.write('The stdout was: {0}.{1}'.format(
             exc.stdout,
+            os.linesep,
+        ))
+        sys.exit(1)
+
+    except subprocess.CalledProcessError as exc:
+
+        sys.stderr.write('There was an error generating the RPM.{0}'.format(
+            os.linesep,
+        ))
+        sys.stderr.write('The exit code was: {0}.{1}'.format(
+            exc.returncode,
+            os.linesep,
+        ))
+        sys.stderr.write('The rpmbuild command was: {0}.{1}'.format(
+            exc.cmd,
             os.linesep,
         ))
         sys.exit(1)
