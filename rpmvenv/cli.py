@@ -181,7 +181,7 @@ def main(argv=sys.argv[1:]):
         sys.exit(1)
 
     sys.stdout.write('RPM generated at {0}{1}.'.format(rpm_path, os.linesep))
-    return rpm_path
+    sys.exit(0)
 
 
 if __name__ == '__main__':
