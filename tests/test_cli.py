@@ -18,4 +18,6 @@ def test_python_cmd_build(python_source_code, python_config_file):
     """Test that a default build works without exception."""
     with pytest.raises(SystemExit) as exc_info:
         cli.main((python_config_file, '--source', python_source_code))
-    assert exc_info.value == 0
+    rc = exc_info.value.code if type(exc_info.value) == SystemExit else \
+        exc_info.value
+    assert rc == 0
