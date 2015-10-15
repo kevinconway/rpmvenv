@@ -16,4 +16,8 @@ from rpmvenv import cli
 )
 def test_python_cmd_build(python_source_code, python_config_file):
     """Test that a default build works without exception."""
-    cli.main((python_config_file, '--source', python_source_code))
+    with pytest.raises(SystemExit) as exc_info:
+        cli.main((python_config_file, '--source', python_source_code))
+    rc = exc_info.value.code if type(exc_info.value) == SystemExit else \
+        exc_info.value
+    assert rc == 0
