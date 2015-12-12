@@ -55,6 +55,10 @@ cfg = Configuration(
                 '-%{release}-XXXXXX)'
             ),
         ),
+        buildarch=StringOption(
+            description='The build architecture to use.',
+            required=False
+        ),
     ),
 )
 
@@ -80,11 +84,16 @@ class Extension(interface.Extension):
         url = config.core.url
         source = config.core.source
         buildroot = config.core.buildroot
+        buildarch = config.core.buildarch
 
         spec.tags['Name'] = name
         spec.tags['Version'] = version
         spec.tags['Release'] = release
         spec.tags['BuildRoot'] = buildroot
+
+        if buildarch:
+
+            spec.tags["BuildArch"] = buildarch
 
         if summary:
 
