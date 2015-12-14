@@ -59,6 +59,14 @@ cfg = Configuration(
             description='The build architecture to use.',
             required=False
         ),
+        requires=ListOption(
+            description='Dependencies',
+            required=False
+        ),
+        provides=ListOption(
+            description='Virtual package',
+            required=False
+        ),
     ),
 )
 
@@ -85,11 +93,17 @@ class Extension(interface.Extension):
         source = config.core.source
         buildroot = config.core.buildroot
         buildarch = config.core.buildarch
+        requires = config.core.requires
+        provides = config.core.provides
 
         spec.tags['Name'] = name
         spec.tags['Version'] = version
         spec.tags['Release'] = release
         spec.tags['BuildRoot'] = buildroot
+        spec.tags['Requires'] = requires
+        spec.tags['Provides'] = provides
+
+
 
         if buildarch:
 
