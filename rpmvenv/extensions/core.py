@@ -100,10 +100,12 @@ class Extension(interface.Extension):
         spec.tags['Version'] = version
         spec.tags['Release'] = release
         spec.tags['BuildRoot'] = buildroot
-        spec.tags['Requires'] = requires
-        spec.tags['Provides'] = provides
 
+        if requires:
+            spec.tags['Requires'] = ', '.join(requires)
 
+        if provides:
+            spec.tags['Provides'] = ', '.join(provides)
 
         if buildarch:
 
