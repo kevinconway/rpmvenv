@@ -9,6 +9,7 @@ from confpy.api import Configuration
 from confpy.api import IntegerOption
 from confpy.api import Namespace
 from confpy.api import StringOption
+from confpy.api import ListOption
 
 from . import interface
 
