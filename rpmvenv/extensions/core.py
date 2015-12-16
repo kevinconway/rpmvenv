@@ -61,10 +61,12 @@ cfg = Configuration(
             required=False
         ),
         requires=ListOption(
+            option=StringOption,
             description='Dependencies',
             required=False
         ),
         provides=ListOption(
+            option=StringOption,
             description='Virtual package',
             required=False
         ),
