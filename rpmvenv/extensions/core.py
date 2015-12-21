@@ -98,8 +98,8 @@ class Extension(interface.Extension):
         source = config.core.source
         buildroot = config.core.buildroot
         buildarch = config.core.buildarch
-        requires = config.core.requires
-        provides = config.core.provides
+        requires = tuple(config.core.requires)
+        provides = tuple(config.core.provides)
 
         spec.tags['Name'] = name
         spec.tags['Version'] = version
