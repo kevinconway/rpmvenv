@@ -91,6 +91,7 @@ class Extension(interface.Extension):
                 ),
             )
         )
+        spec.macros['__prelink_undo_cmd'] = "%{nil}"
 
         spec.globals['__os_install_post'] = (
             "%(echo '%{__os_install_post}' | sed -e "
