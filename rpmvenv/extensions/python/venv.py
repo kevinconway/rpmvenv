@@ -129,6 +129,10 @@ class Extension(interface.Extension):
             'direcotry.',
             'venvctrl-relocate --source=%{venv_dir}'
             ' --destination=/%{venv_install_dir}',
+            '# Strip native modules as they contain buildroot paths in their'
+            ' debug information',
+            'find %{venv_dir}/lib -type f -name "*.so" | xargs -r strip'
+
         ))
 
         return spec
