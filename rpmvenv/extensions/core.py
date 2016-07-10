@@ -9,6 +9,7 @@ from confpy.api import Configuration
 from confpy.api import IntegerOption
 from confpy.api import Namespace
 from confpy.api import StringOption
+from confpy.api import ListOption
 
 from . import interface
 
@@ -59,6 +60,18 @@ cfg = Configuration(
             description='The build architecture to use.',
             required=False
         ),
+        requires=ListOption(
+            option=StringOption(),
+            default=(),
+            description='Dependencies',
+            required=False
+        ),
+        provides=ListOption(
+            option=StringOption(),
+            default=(),
+            description='Virtual package',
+            required=False
+        ),
     ),
 )
 
@@ -85,11 +98,19 @@ class Extension(interface.Extension):
         source = config.core.source
         buildroot = config.core.buildroot
         buildarch = config.core.buildarch
+        requires = tuple(config.core.requires)
+        provides = tuple(config.core.provides)
 
         spec.tags['Name'] = name
         spec.tags['Version'] = version
         spec.tags['Release'] = release
         spec.tags['BuildRoot'] = buildroot
+
+        if requires:
+            spec.tags['Requires'] = ', '.join(requires)
+
+        if provides:
+            spec.tags['Provides'] = ', '.join(provides)
 
         if buildarch:
 
