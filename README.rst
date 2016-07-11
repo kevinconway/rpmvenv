@@ -88,7 +88,7 @@ for interacting with all the required RPM SPEC file tags like "Version" or
         // The name of the buildroot directory to use. Default is random temp dir.
         "buildroot": "%(mktemp -ud %{_tmppath}/%{SOURCE0}-%{version}-%{release}-XXXXXX)",
         // System dependencies.
-        "dependencies": [],
+        "requires": [],
         // Virtual packages satisfied by this RPM.
         "provides": []
     }}
