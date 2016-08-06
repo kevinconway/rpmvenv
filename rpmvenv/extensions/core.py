@@ -25,9 +25,9 @@ cfg = Configuration(
             description='The RPM version to build.',
             required=True,
         ),
-        release=IntegerOption(
-            description='The release number for the RPM. Default is 1.',
-            default=1,
+        release=StringOption(
+            description='The release number for the RPM. Default is 1%{?dist}',
+            default='1%{?dist}',
         ),
         summary=StringOption(
             description='The short package summary.',
