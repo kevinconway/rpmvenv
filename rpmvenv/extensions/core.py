@@ -6,7 +6,6 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 from confpy.api import Configuration
-from confpy.api import IntegerOption
 from confpy.api import Namespace
 from confpy.api import StringOption
 from confpy.api import ListOption
