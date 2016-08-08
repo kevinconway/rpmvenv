@@ -7,6 +7,7 @@ python:
 before_install:
  - sudo apt-get update -qq
  - sudo apt-get install -qq -y rpm
+ - sudo apt-get install -qq -y enchant
 install:
     - if [[ "$(python --version 2>&1)" =~ Python\ (2\.*) ]]; then pip install -U jinja2; else echo "Skipping JINJA2 for $(python --version 2>&1)."; fi
     - pip install -rtest-requirements.txt
