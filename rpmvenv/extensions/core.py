@@ -6,7 +6,6 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 from confpy.api import Configuration
-from confpy.api import IntegerOption
 from confpy.api import Namespace
 from confpy.api import StringOption
 from confpy.api import ListOption
@@ -25,9 +24,9 @@ cfg = Configuration(
             description='The RPM version to build.',
             required=True,
         ),
-        release=IntegerOption(
-            description='The release number for the RPM. Default is 1.',
-            default=1,
+        release=StringOption(
+            description='The release number for the RPM. Default is 1. Supports strings to let free usage of, for example, %{?dist}.',
+            default='1',
         ),
         summary=StringOption(
             description='The short package summary.',
