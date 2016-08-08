@@ -25,7 +25,10 @@ cfg = Configuration(
             required=True,
         ),
         release=StringOption(
-            description='The release number for the RPM. Default is 1. Supports strings to let free usage of, for example, %{?dist}.',
+            description=(
+                'The release number for the RPM. Default is 1. '
+                'Supports strings to let free usage of, for example, %{?dist}.'
+            ),
             default='1',
         ),
         summary=StringOption(
