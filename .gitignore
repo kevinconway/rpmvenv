@@ -54,3 +54,6 @@ target/
 
 # IntelliJ / PyCharm
 *.iml
+
+# Vim
+*.swp
