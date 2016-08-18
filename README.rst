@@ -154,14 +154,29 @@ This extension will allow for packaging any files even if they are not a part
 of the built project. This extension is enabled by adding "file_extras" in the
 list of enabled extensions. This extension also requires that
 'file_permissions' be enabled. It uses the same user and group to assign
-ownership of the extra files.
+ownership of the extra files. Source paths are relative to the root.
 
 .. code-block:: javascript
 
     {"file_extras": {
-        // A list of source:destination pairs relative to the root.
         "files": [
-            'somedir/project_init_script:etc/init.d/project'
+            {
+                "src": "somedir/project_init_script",
+                "dest": "etc/init.d/project",
+            },
+            {
+                "src": "somedir/readme",
+                "dest": "usr/share/doc/project/readme",
+                "doc": true
+            },
+            {
+                "src": "somedir/project.conf",
+                "dest": "etc/project.conf",
+                // valid options include true, "noreplace", and "missingok"
+                "config": "noreplace"
+            },
+            // source:destination pairs (deprecated)
+            "somedir/project_init_script:etc/init.d/project"
         ]
     }}
 
@@ -295,3 +310,4 @@ a summary::
 
     You give us the rights to maintain and distribute your code and we promise
     to maintain an open source distribution of anything you contribute.
+

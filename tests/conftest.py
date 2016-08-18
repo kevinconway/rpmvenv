@@ -61,6 +61,7 @@ def python_source_code(python_git_url, tmpdir):
 @pytest.fixture
 def python_config_file(python, tmpdir):
     """Get a config file path."""
+    extra_filename = 'README.rst'
     json_file = str(tmpdir.join('conf.json'))
     config_body = {
         "extensions": {
@@ -68,6 +69,7 @@ def python_config_file(python, tmpdir):
                 "description_text",
                 "python_venv",
                 "file_permissions",
+                "file_extras",
                 "blocks",
             ],
         },
@@ -83,6 +85,36 @@ def python_config_file(python, tmpdir):
         "file_permissions": {
             "group": "vagrant",
             "user": "vagrant",
+        },
+        "file_extras": {
+            "files": [
+                extra_filename + ":opt/test-pkg/" + extra_filename + "1",
+                {
+                    "src": extra_filename,
+                    "dest": "opt/test-pkg/" + extra_filename + "2"
+                },
+                {
+                    "src": extra_filename,
+                    "dest": "opt/test-pkg/" + extra_filename + "3",
+                    "config": True
+                },
+                {
+                    "src": extra_filename,
+                    "dest": "opt/test-pkg/" + extra_filename + "4",
+                    "config": "noreplace"
+                },
+                {
+                    "src": extra_filename,
+                    "dest": "opt/test-pkg/" + extra_filename + "5",
+                    "doc": True
+                },
+                {
+                    "src": extra_filename,
+                    "dest": "opt/test-pkg/" + extra_filename + "6",
+                    "doc": False,
+                    "config": False
+                }
+            ]
         },
         "python_venv": {
             "cmd": "virtualenv",
