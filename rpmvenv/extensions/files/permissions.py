@@ -50,7 +50,8 @@ class Extension(interface.Extension):
         """Produce file block segments for setting permissions."""
         spec.macros['file_permissions_user'] = config.file_permissions.user
         spec.macros['file_permissions_group'] = config.file_permissions.group
-        spec.blocks.files.append(
+        spec.blocks.files.insert(
+            0,
             '%defattr(-,%{file_permissions_user},%{file_permissions_group},-)'
         )
         if config.file_permissions.create_user:
