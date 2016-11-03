@@ -109,6 +109,7 @@ class Extension(interface.Extension):
         spec.blocks.files.append('/%{venv_install_dir}')
 
         spec.blocks.install.append('%{venv_cmd} %{venv_dir}')
+        spec.blocks.install.append('cd %{SOURCE0}')
         for requirement in config.python_venv.requirements:
 
             spec.blocks.install.append(
@@ -132,7 +133,9 @@ class Extension(interface.Extension):
             ' --destination=/%{venv_install_dir}',
             '# Strip native modules as they contain buildroot paths in their'
             ' debug information',
-            'find %{venv_dir}/lib -type f -name "*.so" | xargs -r strip'
+            'find %{venv_dir}/lib -type f -name "*.so" | xargs -r strip',
+            '# Remove symlink directories (lib64 -> lib)',
+            'for link in `find %{venv_dir} -type l` ; do source=`readlink $link` ; unlink $link ; cp -r $source $link ; done'
 
         ))
 
