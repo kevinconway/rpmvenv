@@ -23,7 +23,7 @@ cfg = Configuration(
         flags=ListOption(
             description='Flags to pass to the venv during creation.',
             option=StringOption(),
-            default=(),
+            default=('--always-copy',),
         ),
         name=StringOption(
             description='The name of the installed venv.',
