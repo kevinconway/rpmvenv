@@ -67,7 +67,7 @@ def write_spec(top, spec):
     return path
 
 
-def copy_source(top, source, name=None):
+def copy_source(top, source, symlink, name=None):
     """Copy the source directory into the SOURCES directory.
 
     Args:
@@ -84,6 +84,7 @@ def copy_source(top, source, name=None):
         source,
         path,
         ignore=shutil.ignore_patterns(*IGNORED_PATTERNS),
+        symlinks=symlink,
     )
     return path
 
