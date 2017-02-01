@@ -58,6 +58,12 @@ def parse_args(argv):
         default=False,
         action='store_true',
     )
+    parser.add_argument(
+        '--symlink',
+        help='Represent symlinks as symlinks instead of copying the file. Default is False',
+        default=False,
+        action='store_true',
+    )
     args, _ = parser.parse_known_args(argv)
     args = vars(args)
     args['config'] = os.path.abspath(args['config'])
@@ -69,10 +75,10 @@ def parse_args(argv):
     return args
 
 
-def generate_rpm(source, destination, specfile, verbose=False):
+def generate_rpm(source, destination, specfile, verbose=False, symlink=False):
     """Generate an RPM from the given arguments mapping."""
     top = rpmbuild.topdir()
-    rpmbuild.copy_source(top, source)
+    rpmbuild.copy_source(top, source, symlink)
     specfile = rpmbuild.write_spec(top, specfile)
     pkg = rpmbuild.build(specfile=specfile, top=top, verbose=verbose)
     shutil.move(pkg, destination)
@@ -140,6 +146,7 @@ def main(argv=sys.argv[1:]):
             args['destination'],
             specfile,
             args['verbose'],
+            args['symlink'],
         )
 
     except rpmbuild.RpmProcessError as exc:
