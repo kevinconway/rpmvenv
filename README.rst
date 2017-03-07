@@ -125,6 +125,8 @@ line in the body of the block.
         "desc": [],
         // A list of files which are included in the package.
         "files": [],
+        // A list of the changes that have been done
+        "changelog": [],
     }}
 
 File Permissions

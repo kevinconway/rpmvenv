@@ -24,6 +24,7 @@ BLOCKS = (
     'clean',
     'desc',
     'files',
+    'changelog',
 )
 
 
