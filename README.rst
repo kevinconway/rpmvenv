@@ -203,6 +203,8 @@ enabled by adding 'python_venv' to the list of enabled extensions.
         "requirements": ["requirements.txt"],
         // Flags to pass to pip during pip install calls.
         "pip_flags": "--index-url https://internal-pypi-server.org",
+        // Optional flag to enable, disable binary striping. Default is true if not present.
+        "strip_binaries": true
     }}
 
 CLI Flags And Environment Variables
@@ -263,6 +265,21 @@ available as CLI flags:
     Normally, the stdout and stderr of the rpmbuild call are captured unless
     there is an exception. Adding this flag enables the real-time output from
     the rpmbuild command.
+
+NOTE: manylinux
+===============
+
+The current (as of posting on 2017-03-08) version of packages generated as
+part of the manylinux project contain binary assets that do not interoperate
+with standard systems tools. Part of the standard build steps is to run
+`strip` on binaries to remove build path information. This is a requirement
+for RPM. The call to `strip` fails because the binaries are non-conforming.
+
+If you encounter this issue, the suggested fix is to add `strip_binaries=false`
+to your `venv` configuration section and run the `rpmvenv` command with the
+`QA_SKIP_BUILD_ROOT=1` environment variable set. This will disable the call
+to `strip` in the build process and disable the post-build check for
+the build path that RPM typically performs.
 
 Testing
 =======

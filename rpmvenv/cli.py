@@ -7,11 +7,11 @@ from __future__ import unicode_literals
 
 import argparse
 import os
+import shutil
 import subprocess
 import sys
 
 import confpy.api
-import shutil
 
 from .extensions import loader as extensions_loader
 from . import rpmbuild

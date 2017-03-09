@@ -14,10 +14,16 @@ from rpmvenv import cli
     not pytest.config.getvalue("python_git_url"),
     reason="No --python-git-url option was given",
 )
-def test_python_cmd_build(python_source_code, python_config_file):
+def test_python_cmd_build(python_source_code, python_config_file, tmpdir):
     """Test that a default build works without exception."""
     with pytest.raises(SystemExit) as exc_info:
-        cli.main((python_config_file, '--source', python_source_code))
+        cli.main(
+            (
+                python_config_file,
+                '--source', python_source_code,
+                '--destination', str(tmpdir),
+            )
+        )
     rc = exc_info.value.code if type(exc_info.value) == SystemExit else \
         exc_info.value
     assert rc == 0

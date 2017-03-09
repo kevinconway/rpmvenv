@@ -1,3 +1,5 @@
+"""Confpy extension that supports using RPM file paths as config options."""
+
 from collections import MutableMapping, namedtuple
 
 from confpy.core import option
@@ -12,6 +14,9 @@ RpmFile = namedtuple('RpmFile',
 
 
 class FileOption(option.Option):
+
+    """Configuration option used to insert file path mappings."""
+
     def coerce(self, value):
         """Convert dict or string values into RpmFile values.
 

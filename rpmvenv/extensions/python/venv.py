@@ -9,6 +9,7 @@ from confpy.api import Configuration
 from confpy.api import ListOption
 from confpy.api import Namespace
 from confpy.api import StringOption
+from confpy.api import BoolOption
 
 from .. import interface
 
@@ -47,6 +48,12 @@ cfg = Configuration(
             option=StringOption(),
             default=(),
         ),
+        strip_binaries=BoolOption(
+            description='Whether to strip native modules of debug information '
+                        'that often contains the buildroot paths',
+            required=False,
+            default=True,
+        )
     ),
 )
 
@@ -130,10 +137,13 @@ class Extension(interface.Extension):
             'direcotry.',
             'venvctrl-relocate --source=%{venv_dir}'
             ' --destination=/%{venv_install_dir}',
-            '# Strip native modules as they contain buildroot paths in their'
-            ' debug information',
-            'find %{venv_dir}/lib -type f -name "*.so" | xargs -r strip'
-
         ))
+
+        if config.python_venv.strip_binaries:
+            spec.blocks.install.extend((
+                '# Strip native modules as they contain buildroot paths in'
+                'their debug information',
+                'find %{venv_dir}/lib -type f -name "*.so" | xargs -r strip',
+            ))
 
         return spec
