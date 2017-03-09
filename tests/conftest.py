@@ -25,6 +25,12 @@ def pytest_addoption(parser):
         help="Python version to use in the test.",
         default="python2.7",
     )
+    parser.addoption(
+        "--skip-binary-strip",
+        action="store_true",
+        default=False,
+        help="Skip the binary strip setp and use the QA_SKIP_BUILD_ROOT.",
+    )
 
 
 def pytest_generate_tests(metafunc):
@@ -36,6 +42,12 @@ def pytest_generate_tests(metafunc):
 
     if 'python' in metafunc.fixturenames:
         metafunc.parametrize('python', (metafunc.config.option.python,))
+
+    if 'skip_binary_strip' in metafunc.fixturenames:
+        metafunc.parametrize(
+                'skip_binary_strip',
+                (metafunc.config.option.skip_binary_strip,)
+        )
 
 
 @pytest.fixture
@@ -58,8 +70,19 @@ def python_source_code(python_git_url, tmpdir):
     return os.path.abspath(str(tmpdir.join(pkg_name)))
 
 
+@pytest.fixture(autouse=True)
+def qa_skip_buildroot(skip_binary_strip):
+    if skip_binary_strip:
+
+        os.environ['QA_SKIP_BUILD_ROOT'] = '1'
+
+    elif 'QA_SKIP_BUILD_ROOT' in os.environ:
+
+        os.environ.pop('QA_SKIP_BUILD_ROOT')
+
+
 @pytest.fixture
-def python_config_file(python, tmpdir):
+def python_config_file(python, skip_binary_strip, tmpdir):
     """Get a config file path."""
     extra_filename = 'README.rst'
     json_file = str(tmpdir.join('conf.json'))
@@ -121,6 +144,7 @@ def python_config_file(python, tmpdir):
             "name": "test-pkg-venv",
             "path": "/usr/share/python",
             "python": python,
+            "strip_binaries": not skip_binary_strip,
         },
         "blocks": {
             "post": ("echo 'Hello'",),
