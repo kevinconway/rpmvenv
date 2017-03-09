@@ -6,8 +6,8 @@ python:
     - "3.3"
     - "3.4"
 env:
-    NO_STRIP=1
-    NO_STRIP=0
+    - NO_STRIP=1
+    - NO_STRIP=0
 addons:
     apt:
         packages:
