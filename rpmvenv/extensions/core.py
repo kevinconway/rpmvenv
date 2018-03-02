@@ -68,6 +68,18 @@ cfg = Configuration(
             description='Dependencies',
             required=False
         ),
+        conflicts=ListOption(
+            option=StringOption(),
+            default=(),
+            description='Conflicts',
+            required=False
+        ),
+        obsoletes=ListOption(
+            option=StringOption(),
+            default=(),
+            description='Obsoletes',
+            required=False
+        ),
         provides=ListOption(
             option=StringOption(),
             default=(),
@@ -101,6 +113,8 @@ class Extension(interface.Extension):
         buildroot = config.core.buildroot
         buildarch = config.core.buildarch
         requires = tuple(config.core.requires)
+        conflicts = tuple(config.core.conflicts)
+        obsoletes = tuple(config.core.obsoletes)
         provides = tuple(config.core.provides)
 
         spec.tags['Name'] = name
@@ -110,6 +124,12 @@ class Extension(interface.Extension):
 
         if requires:
             spec.tags['Requires'] = ', '.join(requires)
+
+        if conflicts:
+            spec.tags['Conflicts'] = ', '.join(conflicts)
+
+        if obsoletes:
+            spec.tags['Obsoletes'] = ', '.join(obsoletes)
 
         if provides:
             spec.tags['Provides'] = ', '.join(provides)
