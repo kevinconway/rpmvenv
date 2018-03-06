@@ -89,6 +89,10 @@ for interacting with all the required RPM SPEC file tags like "Version" or
         "buildroot": "%(mktemp -ud %{_tmppath}/%{SOURCE0}-%{version}-%{release}-XXXXXX)",
         // System dependencies.
         "requires": [],
+        // Conflicting packages.
+        "conflicts": [],
+        // Packages to mark as obsolete.
+        "obsoletes": [],
         // Virtual packages satisfied by this RPM.
         "provides": []
     }}
