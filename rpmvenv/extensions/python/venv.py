@@ -121,21 +121,22 @@ class Extension(interface.Extension):
 
         spec.blocks.files.append('/%{venv_install_dir}')
 
-        spec.blocks.install.append('%{venv_cmd} %{venv_dir}')
+        spec.blocks.install.extend((
+            '%{venv_cmd} %{venv_dir}',
+            'cd %{SOURCE0}',
+        ))
         for requirement in config.python_venv.requirements:
 
             spec.blocks.install.append(
-                '%{{venv_pip}} -r %{{SOURCE0}}/{0}'.format(
+                '%{{venv_pip}} -r {0}'.format(
                     requirement,
                 )
             )
 
         if config.python_venv.require_setup_py:
-            spec.blocks.install.extend((
-                'cd %{SOURCE0}',
-                '%{venv_python} setup.py install',
-                'cd -',
-            ))
+            spec.blocks.install.append(
+                '%{venv_python} setup.py install'
+            )
 
         spec.blocks.install.extend((
             '# RECORD files are used by wheels for checksum. They contain path'
