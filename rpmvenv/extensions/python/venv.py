@@ -38,6 +38,12 @@ cfg = Configuration(
             description='The python executable to use in the venv.',
             required=False,
         ),
+        require_setup_py=BoolOption(
+            description='Whether to build the rpm with the use of setup.py. '
+                        'When false can be used to repackage a wheel',
+            required=False,
+            default=True,
+        ),
         requirements=ListOption(
             description='Names of requirements files to install in the venv.',
             option=StringOption(),
@@ -124,10 +130,14 @@ class Extension(interface.Extension):
                 )
             )
 
+        if config.python_venv.require_setup_py:
+            spec.blocks.install.extend((
+                'cd %{SOURCE0}',
+                '%{venv_python} setup.py install',
+                'cd -',
+            ))
+
         spec.blocks.install.extend((
-            'cd %{SOURCE0}',
-            '%{venv_python} setup.py install',
-            'cd -',
             '# RECORD files are used by wheels for checksum. They contain path'
             ' names which',
             '# match the buildroot and must be removed or the package will '
