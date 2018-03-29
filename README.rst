@@ -205,6 +205,8 @@ enabled by adding 'python_venv' to the list of enabled extensions.
         "path": "/usr/share/python",
         // The python executable to use in the venv.
         "python": "python2.7",
+        // Optional flag to enable building an rpm with, without a setup.py file. Default is true if not present.
+        "require_setup_py": true,
         // Names of requirements files to install in the venv.
         "requirements": ["requirements.txt"],
         // Flags to pass to pip during pip install calls.
