@@ -124,11 +124,11 @@ class Extension(interface.Extension):
         spec.blocks.install.append('%{venv_cmd} %{venv_dir}')
         for requirement in config.python_venv.requirements:
 
-            spec.blocks.install.append(
-                '%{{venv_pip}} -r %{{SOURCE0}}/{0}'.format(
-                    requirement,
-                )
-            )
+            spec.blocks.install.extend((
+                'cd %{SOURCE0}',
+                '%{{venv_pip}} -r {0}'.format(requirement),
+                'cd -',
+            ))
 
         if config.python_venv.require_setup_py:
             spec.blocks.install.extend((
