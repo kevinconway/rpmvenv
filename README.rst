@@ -212,7 +212,11 @@ enabled by adding 'python_venv' to the list of enabled extensions.
         // Flags to pass to pip during pip install calls.
         "pip_flags": "--index-url https://internal-pypi-server.org",
         // Optional flag to enable, disable binary striping. Default is true if not present.
-        "strip_binaries": true
+        "strip_binaries": true,
+        // Optional flag to install the distribution into the venv with
+        // pip install, rather than setup.py install. Default is false if
+        // not present.
+        "use_pip_install": false,
     }}
 
 CLI Flags And Environment Variables
@@ -335,4 +339,3 @@ a summary::
 
     You give us the rights to maintain and distribute your code and we promise
     to maintain an open source distribution of anything you contribute.
-
