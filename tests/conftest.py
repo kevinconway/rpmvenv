@@ -45,8 +45,13 @@ def pytest_generate_tests(metafunc):
 
     if 'skip_binary_strip' in metafunc.fixturenames:
         metafunc.parametrize(
-                'skip_binary_strip',
-                (metafunc.config.option.skip_binary_strip,)
+            'skip_binary_strip',
+            (metafunc.config.option.skip_binary_strip,)
+        )
+
+    if 'use_pip_install' in metafunc.fixturenames:
+        metafunc.parametrize(
+            'use_pip_install', (True, False)
         )
 
 
@@ -82,7 +87,7 @@ def qa_skip_buildroot(skip_binary_strip):
 
 
 @pytest.fixture
-def python_config_file(python, skip_binary_strip, tmpdir):
+def python_config_file(python, skip_binary_strip, use_pip_install, tmpdir):
     """Get a config file path."""
     extra_filename = 'README.rst'
     json_file = str(tmpdir.join('conf.json'))
@@ -145,6 +150,7 @@ def python_config_file(python, skip_binary_strip, tmpdir):
             "path": "/usr/share/python",
             "python": python,
             "strip_binaries": not skip_binary_strip,
+            "use_pip_install": use_pip_install,
         },
         "blocks": {
             "post": ("echo 'Hello'",),
