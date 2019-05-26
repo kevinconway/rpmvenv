@@ -10,12 +10,16 @@ import pytest
 from rpmvenv import cli
 
 
-@pytest.mark.skipif(
-    not pytest.config.getvalue("python_git_url"),
-    reason="No --python-git-url option was given",
-)
-def test_python_cmd_build(python_source_code, python_config_file, tmpdir):
+def test_python_cmd_build(
+    request,
+    python_source_code,
+    python_config_file,
+    tmpdir,
+):
     """Test that a default build works without exception."""
+    if not request.config.getvalue("python_git_url"):
+        pytest.skip("No --python-git-url option was given")
+
     with pytest.raises(SystemExit) as exc_info:
         cli.main(
             (
