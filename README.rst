@@ -314,6 +314,37 @@ this issue then the easiest way to resolve it is to set the
 `LC_ALL=en_US.UTF-8` variable before running `rpmvenv`. This will adjust the
 global setting and enable processing of non-ASCII encoded files.
 
+NOTE: system python
+===================
+
+An issue was opened on 2017-05-18 showing a build failure wnen using the
+default Python installations for some versions of CentOS, Fedora, and RedHat.
+The issue manifests during the creation of the `virtualenv` and appears as
+something like `ImportError: No module named \'time\'` or other error messages
+referencing Python built-ins. The cause appears to related to an
+`unresolved issue <https://github.com/pypa/virtualenv/issues/565>`_ between the
+affected system distribution provided Python installations and `virtualenv`.
+The only known fix for this issue is to re-build Python from source for any
+affected system.
+
+NOTE: bdist eggs with scripts
+=============================
+
+An issue was opened on 2019-01-28 showing a build failure whenever the usual
+`python setup.py install` line was executed for a project that both contained
+scripts and triggered the `bdist` packaging path for an egg. For unknown
+reasons, the `bdist` egg package both installs scripts in the relevant `bin`
+directory _and_ retrains a copy within the egg directory. `rpmvenv` rewrites
+the shebang paths in `bin` but does not account for the second copy in the
+`bdist` egg directory. The result is a build failure because the build root is
+referenced in a file.
+
+The way to resolve this issue is to use the `"use_pip_install": true` option
+which switches the installation method from `python setup.py install` to
+`pip install .`. These two methods result in different installation behavior
+because `pip` will always generate a wheel rather than an egg which does not
+suffer from this issue.
+
 Testing
 =======
 
