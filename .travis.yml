@@ -1,7 +1,7 @@
 language: python
-
 sudo: false
-
+# Setting dist to prevent a change in the default from breaking tests.
+dist: trusty
 python:
     - "2.6"
     - "2.7"
@@ -9,32 +9,29 @@ python:
     - "3.4"
     - "3.5"
     - "3.6"
-
-env:
-    - NO_STRIP=1
-    - NO_STRIP=0
-
 matrix:
     include:
         - python: "3.7"
           dist: xenial
-          env: NO_STRIP=0
-        - python: "3.7"
-          dist: xenial
-          env: NO_STRIP=1
-
 addons:
     apt:
         packages:
         - rpm
         - enchant
-
 install:
     - if [[ "$(python --version 2>&1)" =~ Python\ (2\.*) ]]; then pip install -U jinja2; else echo "Skipping JINJA2 for $(python --version 2>&1)."; fi
     - pip install -rtest-requirements.txt
     - pip install -e ./
-
 script:
-    - if [[ "$(python --version 2>&1)" =~ Python\ (2\.7.*|3\.[4-7].*) ]]; then pep8 rpmvenv/; else echo "Skipping PEP8 for $(python --version 2>&1)."; fi
+    - if [[ "$(python --version 2>&1)" =~ Python\ (2\.7.*|3\.[4-7].*) ]]; then pycodestyle rpmvenv/; else echo "Skipping PEP8 for $(python --version 2>&1)."; fi
     - if [[ "$(python --version 2>&1)" =~ Python\ (2\.7.*|3\.[4-7].*) ]]; then pyflakes rpmvenv/; else echo "Skipping PyFlakes for $(python --version 2>&1)."; fi
-    - if [[ "${NO_STRIP}" == "1" ]]; then py.test -v --skip-binary-strip --python-git-url="https://github.com/kevinconway/rpmvenv_manylinux_issue.git" tests/; else py.test -v tests/; fi
+    # NOTE: This test was added to ensure that the "strip_binaries": false
+    # combined with QA_SKIP_BUILDROOT=1 would allow for a project to build
+    # despite a bug in the manylinux projects that caused some native Python
+    # extensions built as part of wheels to be incompatible with the 'strip'
+    # system utility.
+    - py.test -v --skip-binary-strip --python-git-url="https://github.com/kevinconway/rpmvenv_manylinux_issue.git" tests/
+    # NOTE: This test was added to verify that the manylinux bug was
+    # successfully patched and that we have not regressed. This will start
+    # failing if/when a regression happens.
+    - py.test -v --python-git-url="https://github.com/kevinconway/rpmvenv_manylinux_issue.git" tests/
