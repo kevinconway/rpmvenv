@@ -281,17 +281,38 @@ available as CLI flags:
 NOTE: manylinux
 ===============
 
-The current (as of posting on 2017-03-08) version of packages generated as
-part of the manylinux project contain binary assets that do not interoperate
-with standard systems tools. Part of the standard build steps is to run
-`strip` on binaries to remove build path information. This is a requirement
-for RPM. The call to `strip` fails because the binaries are non-conforming.
+As of 2019-05-26, the issue with packages generated as part of the
+`manylinux <https://github.com/pypa/manylinux>`_ project appears to have
+been resolved. This means wheels containing universal linux binaries should
+work as expected without any special options being enabled for `rpmvenv`.
 
-If you encounter this issue, the suggested fix is to add `strip_binaries=false`
-to your `venv` configuration section and run the `rpmvenv` command with the
-`QA_SKIP_BUILD_ROOT=1` environment variable set. This will disable the call
-to `strip` in the build process and disable the post-build check for
-the build path that RPM typically performs.
+For background, an issue was opened on 2017-02-01 that reported broken builds
+when one of the project dependencies was built using manylinux. The root cause
+appeared to be an incompatiblity between manylinux binaries and the standard
+`strip` system utility. Without being able to `strip` the binaries we were
+unable to remove metadata from those files which included the temporary RPM
+build root. RPM builds automatically fail if any file within the package
+contains a reference to the build root.
+
+A test has been added to this project's suite that will fail if the manylinux
+project issue with `strip` regresses. If the issues does regress you can
+restore your builds by adding `strip_binaries=false` to the `venv` section of
+your configuration and setting the `QA_SKIP_BUILD_ROOT=1` environment variable
+before running `rpmvenv`. The `strip_binaries=false` disables the call to
+`strip` and the `QA_SKIP_BUILD_ROOT=1` variable disables the RPM tool's check
+for build root.
+
+NOTE: unicode
+=============
+
+An issue was opened on 2018-09-01 showing a conflict between some Python
+packages and some environments. Notably, CentOS (and possibly others) default
+to having a global system encoding value set to `ASCII` rather than `UTF-8`.
+Python2.X opens files using the system encoding which results in several errors
+if any of the source code files contain non-ASCII characters. If you encounter
+this issue then the easiest way to resolve it is to set the
+`LC_ALL=en_US.UTF-8` variable before running `rpmvenv`. This will adjust the
+global setting and enable processing of non-ASCII encoded files.
 
 Testing
 =======
