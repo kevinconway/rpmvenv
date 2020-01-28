@@ -155,7 +155,7 @@ class Extension(interface.Extension):
         if config.python_venv.remove_pycache:
             spec.blocks.install.append(
                 r'find %{venv_dir} -type d -name "__pycache__" -print0 | '
-                r'xargs -0 rm -r'
+                r'xargs -0 rm -rf'
             )
 
         spec.blocks.install.extend((

@@ -54,6 +54,11 @@ def pytest_generate_tests(metafunc):
             'use_pip_install', (True, False)
         )
 
+    if 'remove_pycache' in metafunc.fixturenames:
+        metafunc.parametrize(
+            'remove_pycache', (True, False)
+        )
+
 
 @pytest.fixture
 def python_source_code(python_git_url, tmpdir):
@@ -87,7 +92,7 @@ def qa_skip_buildroot(skip_binary_strip):
 
 
 @pytest.fixture
-def python_config_file(python, skip_binary_strip, use_pip_install, tmpdir):
+def python_config_file(python, skip_binary_strip, use_pip_install, remove_pycache, tmpdir):
     """Get a config file path."""
     extra_filename = 'README.rst'
     json_file = str(tmpdir.join('conf.json'))
@@ -151,6 +156,7 @@ def python_config_file(python, skip_binary_strip, use_pip_install, tmpdir):
             "python": python,
             "strip_binaries": not skip_binary_strip,
             "use_pip_install": use_pip_install,
+            "remove_pycache": remove_pycache
         },
         "blocks": {
             "post": ("echo 'Hello'",),
