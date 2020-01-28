@@ -66,6 +66,12 @@ cfg = Configuration(
             required=False,
             default=False,
         ),
+        remove_pycache=BoolOption(
+            description='Whether to remove compiled bytecode to reduce '
+                        'package size.',
+            required=False,
+            default=False,
+        ),
     ),
 )
 
@@ -145,7 +151,12 @@ class Extension(interface.Extension):
                 spec.blocks.install.append('%{venv_python} setup.py install')
 
             spec.blocks.install.append('cd -')
-        spec.blocks.install.append(r'find %{venv_dir} -type d -name "__pycache__" -print0 | xargs -0 rm -r')
+
+        if config.python_venv.remove_pycache:
+            spec.blocks.install.append(
+                r'find %{venv_dir} -type d -name "__pycache__" -print0 | '
+                r'xargs -0 rm -rf'
+            )
 
         spec.blocks.install.extend((
             '# RECORD files are used by wheels for checksum. They contain path'
