@@ -249,6 +249,9 @@ enabled by adding 'python_venv' to the list of enabled extensions.
         // pip install, rather than setup.py install. Default is false if
         // not present.
         "use_pip_install": false,
+        // Optional flag to remove compiled bytecode from venv.
+        // It will reduce size of resulting package. Default is false if not present.
+        "remove_pycache": false,
     }}
 
 CLI Flags And Environment Variables
