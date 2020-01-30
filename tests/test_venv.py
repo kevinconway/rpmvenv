@@ -26,3 +26,23 @@ def test_use_pip_install_on():
     spec = Spec()
     ext.generate(config, spec)
     assert '%{venv_pip} .' in str(spec)
+
+
+class TestRemovePycache:
+    cmd = r'find %{venv_dir} -type d -name "__pycache__" -print0 | xargs -0 rm -rf'
+
+    def test_remove_pycache_off(self):
+        ext = venv.Extension()
+        config = copy.deepcopy(venv.cfg)
+        spec = Spec()
+        ext.generate(config, spec)
+        assert self.cmd not in str(spec)
+
+    def test_remove_pycache_on(self):
+        ext = venv.Extension()
+        config = copy.deepcopy(venv.cfg)
+        config.python_venv.remove_pycache = True
+        spec = Spec()
+        ext.generate(config, spec)
+        assert self.cmd in str(spec)
+
