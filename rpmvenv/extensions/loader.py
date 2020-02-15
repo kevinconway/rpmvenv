@@ -21,7 +21,7 @@ class InvalidDependency(Exception):
 
 def load_extensions(whitelist=()):
     """Get an iterable of extensions in order."""
-    whitelist = tuple(set(('core',) + tuple(whitelist)))
+    whitelist = ('core',) + tuple(whitelist)
     extensions = pkg_resources.iter_entry_points('rpmvenv.extensions')
     extensions = (
         extension for extension in extensions if extension.name in whitelist
