@@ -36,6 +36,7 @@ setup(
             'file_extras = rpmvenv.extensions.files.extras:Extension',
             'python_venv = rpmvenv.extensions.python.venv:Extension',
             'blocks = rpmvenv.extensions.blocks.generic:Extension',
+            'macros = rpmvenv.extensions.macros.macros:Extension',
         ]
     },
     package_data={
