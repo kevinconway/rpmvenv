@@ -10,7 +10,7 @@ with open('README.rst', 'r') as readmefile:
 
 setup(
     name='rpmvenv',
-    version='0.23.0',
+    version='0.24.0',
     url='https://github.com/kevinconway/rpmvenv',
     description='RPM packager for Python virtualenv.',
     author="Kevin Conway",
@@ -24,7 +24,7 @@ setup(
         'argparse',
         'confpy',
         'ordereddict',
-        'semver<2.10', # semver dropped support for legacy Python at 2.10.
+        'semver<2.10',  # semver dropped support for legacy Python at 2.10.
     ],
     entry_points={
         'console_scripts': [
