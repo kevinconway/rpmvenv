@@ -24,7 +24,7 @@ setup(
         'argparse',
         'confpy',
         'ordereddict',
-        'semver',
+        'semver<2.10', # semver dropped support for legacy Python at 2.10.
     ],
     entry_points={
         'console_scripts': [
