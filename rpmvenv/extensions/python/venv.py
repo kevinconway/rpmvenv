@@ -176,5 +176,8 @@ class Extension(interface.Extension):
                 'their debug information',
                 'find %{venv_dir}/lib -type f -name "*.so" | xargs -r strip',
             ))
+        else:
+            spec.macros["debug_package"] = "debug_package %{nil}"
+            spec.macros["__strip"] = "/bin/true"
 
         return spec
