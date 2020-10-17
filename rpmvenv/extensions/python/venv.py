@@ -179,5 +179,10 @@ class Extension(interface.Extension):
         else:
             spec.macros["debug_package"] = "debug_package %{nil}"
             spec.macros["__strip"] = "/bin/true"
+            # Several RPM bundles and dev packages, like redhat-rpm-config and
+            # rpm-devel inject macros into every RPM spec by modifying the
+            # global RPM configuration. This disables the known macros from
+            # those packages that inject an additional binary strip step.
+            # See https://github.com/kevinconway/rpmvenv/pull/93 for details.
 
         return spec
