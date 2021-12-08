@@ -1,6 +1,5 @@
 isort==4.2.15
-pycodestyle
-pyflakes; python_version=='2.7' or python_version>='3.4'
+pycodestyle==2.8.0
+pyflakes==2.4.0; python_version=='2.7' or python_version>='3.4'
 pylint; python_version>='3.4'
-pytest
-pyenchant
+pytest==4.6.11
