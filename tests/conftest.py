@@ -92,7 +92,8 @@ def qa_skip_buildroot(skip_binary_strip):
 
 
 @pytest.fixture
-def python_config_file(python, skip_binary_strip, use_pip_install, remove_pycache, tmpdir):
+def python_config_file(python, skip_binary_strip, use_pip_install,
+                       remove_pycache, tmpdir):
     """Get a config file path."""
     extra_filename = 'README.rst'
     json_file = str(tmpdir.join('conf.json'))
@@ -156,7 +157,12 @@ def python_config_file(python, skip_binary_strip, use_pip_install, remove_pycach
             "python": python,
             "strip_binaries": not skip_binary_strip,
             "use_pip_install": use_pip_install,
-            "remove_pycache": remove_pycache
+            "remove_pycache": remove_pycache,
+            "flags": [
+                "--always-copy",
+                "--activators",
+                "bash,cshell,fish,powershell,python"
+            ]
         },
         "blocks": {
             "post": ("echo 'Hello'",),
