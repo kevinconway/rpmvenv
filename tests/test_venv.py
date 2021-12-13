@@ -29,7 +29,8 @@ def test_use_pip_install_on():
 
 
 class TestRemovePycache:
-    cmd = r'find %{venv_dir} -type d -name "__pycache__" -print0 | xargs -0 rm -rf'
+    cmd = r'find %{venv_dir} -type d -name "__pycache__" ' \
+          r'-print0 | xargs -0 rm -rf'
 
     def test_remove_pycache_off(self):
         ext = venv.Extension()
@@ -45,4 +46,3 @@ class TestRemovePycache:
         spec = Spec()
         ext.generate(config, spec)
         assert self.cmd in str(spec)
-
