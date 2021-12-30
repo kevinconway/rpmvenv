@@ -34,45 +34,39 @@ def pytest_addoption(parser):
 
 
 def pytest_generate_tests(metafunc):
-    if 'python_git_url' in metafunc.fixturenames:
+    if "python_git_url" in metafunc.fixturenames:
         metafunc.parametrize(
-            'python_git_url',
-            (metafunc.config.option.python_git_url,)
+            "python_git_url", (metafunc.config.option.python_git_url,)
         )
 
-    if 'python' in metafunc.fixturenames:
-        metafunc.parametrize('python', (metafunc.config.option.python,))
+    if "python" in metafunc.fixturenames:
+        metafunc.parametrize("python", (metafunc.config.option.python,))
 
-    if 'skip_binary_strip' in metafunc.fixturenames:
+    if "skip_binary_strip" in metafunc.fixturenames:
         metafunc.parametrize(
-            'skip_binary_strip',
-            (metafunc.config.option.skip_binary_strip,)
+            "skip_binary_strip", (metafunc.config.option.skip_binary_strip,)
         )
 
-    if 'use_pip_install' in metafunc.fixturenames:
-        metafunc.parametrize(
-            'use_pip_install', (True, False)
-        )
+    if "use_pip_install" in metafunc.fixturenames:
+        metafunc.parametrize("use_pip_install", (True, False))
 
-    if 'remove_pycache' in metafunc.fixturenames:
-        metafunc.parametrize(
-            'remove_pycache', (True, False)
-        )
+    if "remove_pycache" in metafunc.fixturenames:
+        metafunc.parametrize("remove_pycache", (True, False))
 
 
 @pytest.fixture
 def python_source_code(python_git_url, tmpdir):
     """Generate a source code directory and return the path."""
     # Strip off the '.git' and grap the last URL segment.
-    pkg_name = python_git_url[:-4].split('/')[-1]
-    cmd = 'git clone {0} {1}/{2}'.format(
+    pkg_name = python_git_url[:-4].split("/")[-1]
+    cmd = "git clone {0} {1}/{2}".format(
         python_git_url,
         str(tmpdir),
         pkg_name,
-    ).encode('ascii')
+    ).encode("ascii")
     if sys.version_info[0] > 2:
 
-        cmd = cmd.decode('utf8')
+        cmd = cmd.decode("utf8")
 
     subprocess.check_call(
         shlex.split(cmd),
@@ -84,19 +78,20 @@ def python_source_code(python_git_url, tmpdir):
 def qa_skip_buildroot(skip_binary_strip):
     if skip_binary_strip:
 
-        os.environ['QA_SKIP_BUILD_ROOT'] = '1'
+        os.environ["QA_SKIP_BUILD_ROOT"] = "1"
 
-    elif 'QA_SKIP_BUILD_ROOT' in os.environ:
+    elif "QA_SKIP_BUILD_ROOT" in os.environ:
 
-        os.environ.pop('QA_SKIP_BUILD_ROOT')
+        os.environ.pop("QA_SKIP_BUILD_ROOT")
 
 
 @pytest.fixture
-def python_config_file(python, skip_binary_strip, use_pip_install,
-                       remove_pycache, tmpdir):
+def python_config_file(
+    python, skip_binary_strip, use_pip_install, remove_pycache, tmpdir
+):
     """Get a config file path."""
-    extra_filename = 'README.rst'
-    json_file = str(tmpdir.join('conf.json'))
+    extra_filename = "README.rst"
+    json_file = str(tmpdir.join("conf.json"))
     config_body = {
         "extensions": {
             "enabled": [
@@ -125,29 +120,29 @@ def python_config_file(python, skip_binary_strip, use_pip_install,
                 extra_filename + ":opt/test-pkg/" + extra_filename + "1",
                 {
                     "src": extra_filename,
-                    "dest": "opt/test-pkg/" + extra_filename + "2"
+                    "dest": "opt/test-pkg/" + extra_filename + "2",
                 },
                 {
                     "src": extra_filename,
                     "dest": "opt/test-pkg/" + extra_filename + "3",
-                    "config": True
+                    "config": True,
                 },
                 {
                     "src": extra_filename,
                     "dest": "opt/test-pkg/" + extra_filename + "4",
-                    "config": "noreplace"
+                    "config": "noreplace",
                 },
                 {
                     "src": extra_filename,
                     "dest": "opt/test-pkg/" + extra_filename + "5",
-                    "doc": True
+                    "doc": True,
                 },
                 {
                     "src": extra_filename,
                     "dest": "opt/test-pkg/" + extra_filename + "6",
                     "doc": False,
-                    "config": False
-                }
+                    "config": False,
+                },
             ]
         },
         "python_venv": {
@@ -158,18 +153,13 @@ def python_config_file(python, skip_binary_strip, use_pip_install,
             "strip_binaries": not skip_binary_strip,
             "use_pip_install": use_pip_install,
             "remove_pycache": remove_pycache,
-            "flags": [
-                "--always-copy",
-                "--activators",
-                "bash,cshell,fish,powershell,python"
-            ]
         },
         "blocks": {
             "post": ("echo 'Hello'",),
             "desc": ("test pkg description",),
-        }
+        },
     }
-    with open(json_file, 'w') as conf_file:
+    with open(json_file, "w") as conf_file:
 
         conf_file.write(json.dumps(config_body))
 
