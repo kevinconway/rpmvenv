@@ -21,9 +21,9 @@ def pytest_addoption(parser):
         default="https://github.com/kevinconway/rpmvenv.git",
     )
     parser.addoption(
-        "--python",
+        "--python_ver",
         help="Python version to use in the test.",
-        default="python2.7",
+        default="python3.9",
     )
     parser.addoption(
         "--skip-binary-strip",
@@ -40,7 +40,7 @@ def pytest_generate_tests(metafunc):
         )
 
     if "python" in metafunc.fixturenames:
-        metafunc.parametrize("python", (metafunc.config.option.python,))
+        metafunc.parametrize("python", (metafunc.config.option.python_ver,))
 
     if "skip_binary_strip" in metafunc.fixturenames:
         metafunc.parametrize(
