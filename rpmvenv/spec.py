@@ -7,13 +7,7 @@ from __future__ import unicode_literals
 
 import copy
 
-try:
-
-    from ordereddict import OrderedDict
-
-except ImportError:
-
-    from collections import OrderedDict
+from collections import OrderedDict
 
 from . import template
 
