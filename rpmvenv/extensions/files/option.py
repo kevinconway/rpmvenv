@@ -1,6 +1,7 @@
 """Confpy extension that supports using RPM file paths as config options."""
 
-from collections import MutableMapping, namedtuple
+from collections.abc import MutableMapping
+from collections import namedtuple
 
 from confpy.core import option
 
