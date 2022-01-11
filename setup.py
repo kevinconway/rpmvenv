@@ -21,9 +21,7 @@ setup(
     install_requires=[
         "jinja2",
         "venvctrl",
-        "argparse",
         "confpy",
-        "ordereddict",
         "semver",
     ],
     entry_points={
