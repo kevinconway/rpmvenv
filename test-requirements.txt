@@ -1,5 +1,5 @@
-isort==4.2.15
+isort==5.10.1
 pycodestyle==2.8.0
-pyflakes==2.4.0; python_version=='2.7' or python_version>='3.4'
-pylint; python_version>='3.4'
-pytest==4.6.11
+pyflakes==2.4.0
+pylint==2.12.2
+pytest==6.2.5
