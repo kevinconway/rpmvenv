@@ -22,6 +22,8 @@ rpmvenv
 
     -   `Additional Options <#additional-options>`_
 
+-   `NOTE: python 2 support <#note-python-2-support>`_
+
 -   `NOTE: manylinux <#note-manylinux>`_
 
 -   `NOTE: unicode <#note-unicode>`_
@@ -312,6 +314,31 @@ available as CLI flags:
     Normally, the stdout and stderr of the rpmbuild call are captured unless
     there is an exception. Adding this flag enables the real-time output from
     the rpmbuild command.
+
+NOTE: python 2 support
+======================
+
+Python 2, itself, was discontinued on 2020-01-01. Since then, libraries that
+`rpmvenv` depends on have started breaking compatibility with Python 2 or even
+adding code that prevents the use of that library in Python 2 regardless of
+compatibility. It has also become increasingly difficult to support code that
+works from Python 2.6 to the most recent versions of Python 3.
+
+The last releases that support Python 2 are version `0.27.0` and `1.0.0`. These
+are both the same release. There will be no more releases in the `0.x` or `1.x`
+ranges.
+
+If you are using Python 2 then here is an example `requirements.txt` that has
+dependencies pinned to the last known versions that support Python 2:
+
+::
+
+    jinja2==2.11.3
+    venvctrl>=0.5.0,<2.0.0
+    argparse>=1.4.0,<2.0.0
+    confpy>=0.11.0,<2.0.0
+    ordereddict>=1.1.0,<2.0.0
+    semver>=2.9.1,<3.0.0
 
 NOTE: manylinux
 ===============
