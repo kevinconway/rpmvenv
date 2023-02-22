@@ -64,6 +64,7 @@ def test_parse_dict_no_file_type_explicit():
     assert rpm_file.dest == value['dest']
     assert rpm_file.file_type is None
     assert rpm_file.file_type_option is None
+    assert rpm_file.file_attr is None
 
 
 def test_parse_dict_doc_file():
@@ -72,7 +73,7 @@ def test_parse_dict_doc_file():
     value = {
         'src': '/foo/bar',
         'dest': '/etc/foo',
-        'doc': 'foobar'  # anything truthy is okay, value is ignored
+        'doc': 'foobar',  # anything truthy is okay, value is ignored
     }
 
     rpm_file = parser.coerce(value)
@@ -98,6 +99,27 @@ def test_parse_dict_config_file_no_option():
     assert rpm_file.dest == value['dest']
     assert rpm_file.file_type == 'config'
     assert rpm_file.file_type_option is None
+
+
+def test_parse_dict_file_with_attributes():
+    parser = file_opt.FileOption()
+
+    value = {
+        'src': '/foo/bar',
+        'dest': '/etc/foo',
+        'attr': {
+            "permissions": "0644",
+            "user": "testuser"
+        }
+    }
+
+    rpm_file = parser.coerce(value)
+    assert isinstance(rpm_file, file_opt.RpmFile)
+    assert rpm_file.src == value['src']
+    assert rpm_file.dest == value['dest']
+    assert rpm_file.file_type == None
+    assert rpm_file.file_type_option == None
+    assert rpm_file.file_attr == {"permissions": "0644", "user":"testuser", "group":"-"}
 
 
 def test_parse_dict_config_file_with_option():
