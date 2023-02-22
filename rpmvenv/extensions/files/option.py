@@ -63,7 +63,7 @@ class FileOption(option.Option):
                     file_attr['user'] = '-'
                 if 'group' not in file_attr:
                     file_attr['group'] = '-'
-            elif file_attr is not None: # Erase wrong values
+            elif file_attr is not None:  # Erase wrong values
                 file_attr = None
 
             return RpmFile(src=value['src'],

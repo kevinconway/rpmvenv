@@ -117,9 +117,13 @@ def test_parse_dict_file_with_attributes():
     assert isinstance(rpm_file, file_opt.RpmFile)
     assert rpm_file.src == value['src']
     assert rpm_file.dest == value['dest']
-    assert rpm_file.file_type == None
-    assert rpm_file.file_type_option == None
-    assert rpm_file.file_attr == {"permissions": "0644", "user":"testuser", "group":"-"}
+    assert rpm_file.file_type is None
+    assert rpm_file.file_type_option is None
+    assert rpm_file.file_attr == {
+        "permissions": "0644",
+        "user": "testuser",
+        "group": "-"
+        }
 
 
 def test_parse_dict_config_file_with_option():
