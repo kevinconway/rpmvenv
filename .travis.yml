@@ -21,7 +21,7 @@ addons:
     apt:
         packages:
         - rpm
-        - enchant
+        - enchant-2
 install:
     - if [[ "$(python --version 2>&1)" =~ Python\ (2\.*) ]]; then pip install -U jinja2; else echo "Skipping JINJA2 for $(python --version 2>&1)."; fi
     - pip install -rtest-requirements.txt
