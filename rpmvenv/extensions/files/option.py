@@ -1,5 +1,4 @@
 """Confpy extension that supports using RPM file paths as config options."""
-
 from collections.abc import MutableMapping
 from collections import namedtuple
 
@@ -11,7 +10,11 @@ except NameError:
     basestring = str
 
 RpmFile = namedtuple('RpmFile',
-                     ['src', 'dest', 'file_type', 'file_type_option'])
+                     ['src',
+                      'dest',
+                      'file_type',
+                      'file_type_option',
+                      'file_attr'])
 
 
 class FileOption(option.Option):
@@ -52,10 +55,22 @@ class FileOption(option.Option):
             elif value.get('doc', False):
                 file_type = 'doc'
 
+            file_attr = value.get('attr', None)
+            if file_attr is not None and isinstance(file_attr, MutableMapping):
+                if 'permissions' not in file_attr:
+                    file_attr['permissions'] = '-'
+                if 'user' not in file_attr:
+                    file_attr['user'] = '-'
+                if 'group' not in file_attr:
+                    file_attr['group'] = '-'
+            elif file_attr is not None:  # Erase wrong values
+                file_attr = None
+
             return RpmFile(src=value['src'],
                            dest=value['dest'],
                            file_type=file_type,
-                           file_type_option=file_type_option)
+                           file_type_option=file_type_option,
+                           file_attr=file_attr,)
 
         elif isinstance(value, basestring):
             try:
@@ -63,7 +78,8 @@ class FileOption(option.Option):
                 return RpmFile(src=src,
                                dest=dest,
                                file_type=None,
-                               file_type_option=None)
+                               file_type_option=None,
+                               file_attr=None,)
             except ValueError:
                 raise ValueError('The value {0} is missing a :'.format(value))
 
