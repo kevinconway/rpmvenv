@@ -23,7 +23,9 @@ def pytest_addoption(parser):
     parser.addoption(
         "--python_ver",
         help="Python version to use in the test.",
-        default="python3.9",
+        default=(
+            "python{0}.{1}".format(sys.version_info[0], sys.version_info[1])
+        ),
     )
     parser.addoption(
         "--skip-binary-strip",
@@ -147,6 +149,7 @@ def python_config_file(
         },
         "python_venv": {
             "cmd": "virtualenv",
+            "flags": ["--always-copy", "--activators", "bash,python"],
             "name": "test-pkg-venv",
             "path": "/usr/share/python",
             "python": python,
