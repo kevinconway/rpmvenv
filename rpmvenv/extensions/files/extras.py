@@ -62,7 +62,7 @@ class Extension(interface.Extension):
                     )
                 else:
                     # file with a modifier (e.g. doc) but no additional option
-                    file_directive += file_directive + '%{1} /{0}'.format(
+                    file_directive += '%{1} /{0}'.format(
                         file_.dest,
                         file_.file_type)
             else:
