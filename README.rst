@@ -194,7 +194,8 @@ This extension will allow for packaging any files even if they are not a part
 of the built project. This extension is enabled by adding "file_extras" in the
 list of enabled extensions. This extension also requires that
 'file_permissions' be enabled. It uses the same user and group to assign
-ownership of the extra files. Source paths are relative to the root.
+ownership of the extra files by default but allows for individual files to have
+special permissions set. Source paths are relative to the root.
 
 .. code-block:: javascript
 
@@ -203,6 +204,17 @@ ownership of the extra files. Source paths are relative to the root.
             {
                 "src": "somedir/project_init_script",
                 "dest": "etc/init.d/project",
+            },
+            {
+                "src": "somedir/with/perms",
+                "dest": "etc/with/perms",
+                "attr": {
+                    "permissions": "0644",
+                    // Leaving user or group unspecified means they use the
+                    // default value from files_permissions.
+                    "user": "testuser",
+                    "group": "testgroup"
+                }
             },
             {
                 "src": "somedir/readme",
