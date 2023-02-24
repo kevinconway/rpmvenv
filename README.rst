@@ -32,6 +32,8 @@ rpmvenv
 
 -   `NOTE: bdist eggs with scripts <#note-bdist-eggs-with-scripts>`_
 
+-   `NOTE: BUILDROOT errors and nushell <#note-buildroot-errors-and-nushell>`_
+
 -   `Testing <#testing>`_
 
 -   `License <#license>`_
@@ -418,6 +420,36 @@ which switches the installation method from `python setup.py install` to
 `pip install .`. These two methods result in different installation behavior
 because `pip` will always generate a wheel rather than an egg which does not
 suffer from this issue.
+
+NOTE: BUILDROOT errors and nushell
+==================================
+
+If you are using recent versions of virtualenv then you may see error messages
+like this::
+
+    /tmp/rpmvenvz_kldppd/BUILDROOT/test-pkg-1.2.3.4-1.x86_64/usr/share/python/test-pkg-venv/bin/activate.nu
+    Found '/tmp/rpmvenvz_kldppd/BUILDROOT/test-pkg-1.2.3.4-1.x86_64' in installed files; aborting
+
+The issue is that virtualenv recently changed the contents of the nushell
+activation script that is included by default in every virtualenv. There's an
+`issue <https://github.com/kevinconway/venvctrl/issues/23>`_ tracking this for
+`venvctrl`, which is the tool used by `rpmvenv` to rewrite virtualenv paths.
+
+In the meantime, the easiest workaround is to disable nushell if you aren't
+using it. To do this, set your `python_venv.flags` option like this:
+
+.. code-block:: javascript
+
+    {
+        "python_venv": {
+            "flags": ["--always-copy", "--activators", "bash,python"]
+        }
+    }
+
+This disables the generation of all activation scripts except one for bash and
+Python. See `the virtualenv docs
+<https://virtualenv.pypa.io/en/latest/cli_interface.html#activators>`_ for the
+full set of possible activators if you need more than bash and Python.
 
 Testing
 =======
