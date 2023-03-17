@@ -149,7 +149,7 @@ def python_config_file(
         },
         "python_venv": {
             "cmd": "virtualenv",
-            "flags": ["--always-copy", "--activators", "bash,python"],
+            "flags": ["--always-copy"],
             "name": "test-pkg-venv",
             "path": "/usr/share/python",
             "python": python,
